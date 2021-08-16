@@ -5,9 +5,9 @@
 	  "src": "/engine/src/actor/actor.js",
 	  "config": {
 		  "pos": {
-			"x": 0,
-			"y": 2,
-			"z": 2
+			"x": -5,
+			"y": -3,
+			"z": -10
 		  },
 		  "root": {
 			"type": "Model",
@@ -36,9 +36,9 @@
 		"src": "/engine/src/actor/actor.js",
 		"config": {
 			"pos": {
-			  "x": -5,
-			  "y": 3,
-			  "z": -4
+			  "x": 0,
+			  "y": -3,
+			  "z": -15
 			},
 			"root": {
 			  "type": "Model",
@@ -67,9 +67,9 @@
 		"src": "/engine/src/actor/actor.js",
 		"config": {
 			"pos": {
-			  "x": -10,
-			  "y": 2,
-			  "z": 2
+			  "x": 5,
+			  "y": -3,
+			  "z": -10
 			},
 			"root": {
 			  "type": "Model",

@@ -10,7 +10,7 @@ class View {
 
     constructor() {
         this.#camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-        this.#camera.position.set(-5, 3, 10);
+        this.#camera.position.set(0, 0, 0);
     }
 
     get camera() { return this.#camera; }
