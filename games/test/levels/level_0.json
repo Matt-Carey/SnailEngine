@@ -1,0 +1,98 @@
+{
+  "actors": [
+    {
+	  "type": "Actor",
+	  "src": "/engine/src/actor/actor.js",
+	  "config": {
+		  "pos": {
+			"x": 0,
+			"y": 2,
+			"z": 2
+		  },
+		  "root": {
+			"type": "Model",
+			"src": "/engine/src/component/3d/model.js",
+			"config": {
+				"children": [],
+				"rPos": {
+					"x": 0,
+					"y": 0,
+					"z": 0
+				  },
+				"model":"/games/test/content/glb/RobotExpressive.glb",
+				"anim": {
+					"type": "RunningRobotAnimationMixer",
+					"src": "/games/test/src/RobotAnimationMixer.js",
+					"config": {
+						"anim": "/games/test/content/glb/RobotExpressive.glb"
+					}
+				}
+			}
+		}
+	  }
+    },
+	{
+		"type": "Actor",
+		"src": "/engine/src/actor/actor.js",
+		"config": {
+			"pos": {
+			  "x": -5,
+			  "y": 3,
+			  "z": -4
+			},
+			"root": {
+			  "type": "Model",
+			  "src": "/engine/src/component/3d/model.js",
+			  "config": {
+				  "children": [],
+				  "rPos": {
+					  "x": 0,
+					  "y": 0,
+					  "z": 0
+					},
+				  "model":"/games/test/content/glb/RobotExpressive.glb",
+				  "anim": {
+					  "type": "RobotAnimationMixer",
+					  "src": "/games/test/src/RobotAnimationMixer.js",
+					  "config": {
+						  "anim": "/games/test/content/glb/RobotExpressive.glb"
+					  }
+				  }
+			  }
+		  }
+		}
+	  },
+	  {
+		"type": "Actor",
+		"src": "/engine/src/actor/actor.js",
+		"config": {
+			"pos": {
+			  "x": -10,
+			  "y": 2,
+			  "z": 2
+			},
+			"root": {
+			  "type": "Model",
+			  "src": "/engine/src/component/3d/model.js",
+			  "config": {
+				  "children": [],
+				  "rPos": {
+					  "x": 0,
+					  "y": 0,
+					  "z": 0
+					},
+				  "model":"/games/test/content/glb/RobotExpressive.glb",
+				  "anim": {
+					"type": "DancingRobotAnimationMixer",
+					"src": "/games/test/src/RobotAnimationMixer.js",
+					"config": {
+						"anim": "/games/test/content/glb/RobotExpressive.glb"
+					}
+				}
+			  }
+		  }
+		}
+	  }
+  ]
+}
+
