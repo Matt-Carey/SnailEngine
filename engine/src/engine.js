@@ -11,7 +11,8 @@ class Engine {
 		this.#time = Date.now();
 		this.#world = new World(this);
 		if(IS_BROWSER) {
-			this.#renderer = new Renderer();
+			const snailCanvas = document.getElementById('snail-canvas');
+			this.#renderer = new Renderer(snailCanvas);
 		}
 
 		const engine = this;
@@ -40,10 +41,6 @@ class Engine {
 		this.#time = timeNow;
 		//console.log('Delta Time:' + dt + ', Time Now:' + this.#time);
 		this.#world.tick(dt);
-	}
-
-	get renderer() {
-		return this.#renderer;
 	}
 
 	render() {
