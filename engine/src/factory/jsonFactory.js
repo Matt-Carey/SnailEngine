@@ -12,7 +12,7 @@ class JSONFactory {
                 const modules = await ModuleFactory.getNodeModules();
                 const fs = modules.fs;
                 const path = modules.path;
-                const fullPath = path.resolve(process.cwd(), url.slice(1));
+                const fullPath = path.join(process.cwd(), url);
                 const file = fs.readFileSync(fullPath);
                 return JSON.parse(file);
             }

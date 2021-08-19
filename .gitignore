@@ -1,2 +1,5 @@
 #ignore local scripts
 *.bat
+#ignore node modules
+node_modules/
+package-lock.json

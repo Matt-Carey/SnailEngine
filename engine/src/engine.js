@@ -35,6 +35,10 @@ class Engine {
 		}
 	}
 
+	get world() {
+		return this.#world;
+	}
+
 	tick() {
 		let timeNow = Date.now();
 		let dt = timeNow - this.#time;
