@@ -1,6 +1,6 @@
 import { ModuleFactory } from './moduleFactory.js';
 
-class ObjectFactory {
+class EntityFactory {
 	static srcMap = new Map();
 	static pendingMap = new Map();
 	
@@ -10,7 +10,8 @@ class ObjectFactory {
 				if(result != null) {
 					const objClass = result[type];
 					if(objClass != null) {
-						return new objClass(owner, config);
+
+						return new objClass({owner, type, src, config});
 					}
 				}
 				return nullptr;
@@ -19,4 +20,4 @@ class ObjectFactory {
 	}
 }
 
-export { ObjectFactory };
+export { EntityFactory };

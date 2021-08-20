@@ -1,34 +1,36 @@
 import { Component } from './../component.js';
-import { ObjectFactory } from './../../factory/objectFactory.js';
+import { EntityFactory } from './../../factory/EntityFactory.js';
 import { GLTFFactory } from './../../factory/gltfFactory.js';
-import { IS_BROWSER } from '../../util/env.js';
 
 class Model extends Component {
+    #gltf = null;
     #model = null;
     #anim = null;
 
-    constructor(owner, config) {
-        super(owner, config);
-        
-        // Only load GLTF models on clients
-        if(IS_BROWSER) {
-            const modelConfig = config['model'];
-            (async () => {
-                await GLTFFactory.getModel(modelConfig).then(model => {
-                    this.#model = model;
-                    this.world.scene.add(this.#model);
+    constructor(init) {
+        super(init);
 
-                    const animConfig = config['anim'];
-                    if(animConfig != null) {
-                        (async () => {
-                            await ObjectFactory.make(this, animConfig.type, animConfig.src, animConfig.config).then(anim => {
-                                this.#anim = anim;
-                            });
-                        })();
-                    }
+        this.#gltf = init.config['gltf'];
+        GLTFFactory.getModel(this.#gltf).then(model => {
+            this.#model = model;
+            if(this.#model != null) {
+                this.world.scene.add(this.#model);
+            }
+
+            const animConfig = init.config['anim'];
+            if(animConfig != null) {
+                EntityFactory.make(this, animConfig.type, animConfig.src, animConfig.config).then(anim => {
+                    this.#anim = anim;
                 });
-            })();
-        }
+            }
+        });
+    }
+
+    toJSON() {
+        const json = super.toJSON();
+        json.config['gltf'] = this.#gltf;
+        json.config['anim'] = this.#anim?.toJSON();
+        return json;
     }
 
     tick(dt) {

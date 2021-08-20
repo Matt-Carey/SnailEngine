@@ -3,7 +3,10 @@ import { AnimationMixer } from '../../../engine/src/component/3d/animationMixer.
 class RobotAnimationMixer extends AnimationMixer {
     _onMixerReady() {
         super._onMixerReady();
-        this._actions[this.action].play();
+        const actionToPlay = this._actions[this.action];
+        if(actionToPlay != null) {
+            actionToPlay.play();
+        }
     }
 
     get action() {

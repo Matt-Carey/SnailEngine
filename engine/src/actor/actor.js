@@ -1,28 +1,34 @@
-import { ObjectFactory } from './../factory/objectFactory.js'
+import { Entity } from './../entity.js';
+import { EntityFactory } from './../factory/EntityFactory.js'
 import { Vector } from './../math/vector.js';
 
-class Actor {
-	#owner = null;
+class Actor extends Entity {
 	#root = null;
 	#pos = new Vector(0, 0, 0);
 
-	constructor(owner, config) {
-		this.#owner = owner;
-		
+	constructor(init) {
+		super(init);
 		this.#root = null;
-		const rootConfig = config['root'];
-		(async () => {
-			await ObjectFactory.make(this, rootConfig.type, rootConfig.src, rootConfig.config).then(component => {
-				this.#root = component;
-			});
-		})();
+		const rootConfig = init.config['root'];
+		EntityFactory.make(this, rootConfig.type, rootConfig.src, rootConfig.config).then(component => {
+			this.#root = component;
+		});
 		
-		const pos = config['pos'];
+		const pos = init.config['pos'];
 		this.#pos = new Vector(pos.x, pos.y, pos.z);
 	}
 
+	toJSON() {
+		const json = super.toJSON();
+		json['config'] = {
+			root: this.#root?.toJSON(),
+			pos: this.#pos.toJSON()
+		}
+		return json;
+	}
+
 	get world() {
-		return this.#owner.world;
+		return this.owner.world;
 	}
 
 	get position() {

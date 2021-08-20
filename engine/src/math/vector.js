@@ -8,6 +8,14 @@ class Vector {
 		this.#y = y;
 		this.#z = z;
 	}
+
+	toJSON() {
+		return {
+			x: this.#x,
+			y: this.#y,
+			z: this.#z,
+		}
+	}
 	
 	get x() { return this.#x; }
 	set x(x) { this.#x = x; }

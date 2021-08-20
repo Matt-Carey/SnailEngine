@@ -12,7 +12,7 @@ class GLTFFactory {
         return (async () => {
             
             if(IS_NODE) {
-				// Models should not be loaded on server
+				// GLTF should not be loaded on server
                 return null;
             }
 
@@ -45,6 +45,10 @@ class GLTFFactory {
 
 	static getModel(src) {
 		return (async () => {
+			if(IS_NODE) {
+				// GLTF should not be loaded on server
+                return null;
+            }
             return await GLTFFactory.get(src).then(result => {
 				const model = result.scene;
 				const clone = SkeletonUtils.clone(model);
@@ -55,6 +59,10 @@ class GLTFFactory {
 
 	static getAnims(src) {
 		return (async () => {
+			if(IS_NODE) {
+				// GLTF should not be loaded on server
+                return null;
+            }
             return await GLTFFactory.get(src).then(result => {
 				return result.animations;
 			});

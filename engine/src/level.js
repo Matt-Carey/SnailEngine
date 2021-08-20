@@ -1,4 +1,5 @@
-import { ObjectFactory } from './factory/objectFactory.js';
+import { EntityFactory } from './factory/EntityFactory.js';
+import { diff } from './util/diff.js';
 
 class Level {
 	#world = null;
@@ -8,11 +9,9 @@ class Level {
 		this.#world = world;
 		this.#actors = [];
 		for(const actorConfig of config.actors) {
-			(async () => {
-				await ObjectFactory.make(this, actorConfig.type, actorConfig.src, actorConfig.config).then(actor => {
-					this.#actors.push(actor);
-				});
-			})();
+			EntityFactory.make(this, actorConfig.type, actorConfig.src, actorConfig.config).then(actor => {
+				this.#actors.push(actor);
+			});
 		}
 		return this;
 	}
