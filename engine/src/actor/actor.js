@@ -9,8 +9,8 @@ class Actor extends Entity {
 	constructor(init) {
 		super(init);
 		this.#root = null;
-		const rootConfig = init.config['root'];
-		EntityFactory.make(this, rootConfig.type, rootConfig.src, rootConfig.config).then(component => {
+		const rootJson = init.config['root']
+		EntityFactory.make(this, rootJson).then(component => {
 			this.#root = component;
 		});
 		

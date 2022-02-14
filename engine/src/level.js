@@ -5,11 +5,11 @@ class Level {
 	#world = null;
 	#actors = [];
 
-	constructor(world, config) {
+	constructor(world, json) {
 		this.#world = world;
 		this.#actors = [];
-		for(const actorConfig of config.actors) {
-			EntityFactory.make(this, actorConfig.type, actorConfig.src, actorConfig.config).then(actor => {
+		for(const entityJson of json.entities) {
+			EntityFactory.make(this, entityJson).then(actor => {
 				this.#actors.push(actor);
 			});
 		}

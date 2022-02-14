@@ -1,4 +1,5 @@
 import { IS_NODE } from '../util/env.js';
+import { Config } from '../config.js';
 
 class ModuleFactory {
 	static #srcMap = new Map();
@@ -6,17 +7,14 @@ class ModuleFactory {
 
 	static getNodeModules() {
 		if(IS_NODE) {
-			return ModuleFactory.get('/engine/src/util/nodemodules.js');
+			return ModuleFactory.get('Engine', '/src/util/nodemodules.js');
 		}
 		return null;
 	}
 
-    static get(src) {
+    static get(cdn, src) {
         return (async () => {
-            
-            if(IS_NODE) {
-                src = "./../../.." + src;
-            }
+			src = Config['cdn'][cdn] + src;
 
 			const module = this.#srcMap.get(src);
 			if(module != null) {

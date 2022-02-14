@@ -1,0 +1,6 @@
+{
+    "cdn": {
+        "Engine": "/engine",
+        "Game": "/games/test"
+    }
+}

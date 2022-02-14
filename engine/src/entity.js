@@ -1,15 +1,13 @@
 import { UID } from './util/uid.js';
 
 class Entity {
+    #meta = null;
 	#owner = null;
-	#type = null;
-	#src = null;
     #id = null;
 
     constructor(init) {
-		this.#owner = init.owner;
-		this.#type = init.type;
-		this.#src = init.src;
+        this.#meta = init.meta
+        this.#owner = init.owner
         this.#id = init.config['id'] ?? UID();
     }
 
@@ -19,8 +17,9 @@ class Entity {
 
     toJSON() {
         return {
-            type: this.#type,
-            src: this.#src
+            meta: this.#meta,
+            owner: this.#owner,
+            id: this.#id
         }
     }
 }

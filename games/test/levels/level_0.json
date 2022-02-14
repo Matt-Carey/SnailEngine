@@ -1,31 +1,44 @@
 {
-	"actors": [
+	"entities": [
 	  {
-		"type": "Actor",
-		"src": "/engine/src/actor/actor.js",
+		"meta": {
+		  "cdn": "Engine",
+		  "type": "Actor",
+		  "src": "/src/actor/actor.js"
+		},
 		"config": {
+		  "id": 1,
 		  "root": {
-			"type": "Model",
-			"src": "/engine/src/component/3d/model.js",
+			"meta": {
+			  "cdn": "Engine",
+			  "type": "Model",
+			  "src": "/src/component/3d/model.js"
+			},
 			"config": {
+			  "id": 2,
 			  "children": [],
 			  "rpos": {
 				"x": 0,
 				"y": 0,
 				"z": 0
 			  },
-			  "gltf": "/games/test/content/glb/RobotExpressive.glb",
+			  "gltf": "/content/glb/RobotExpressive.glb",
 			  "anim": {
-				"type": "RunningRobotAnimationMixer",
-				"src": "/games/test/src/RobotAnimationMixer.js",
+				"meta": {
+				  "cdn": "Game",
+				  "type": "RunningRobotAnimationMixer",
+				  "src": "/src/RobotAnimationMixer.js"
+				},
 				"config": {
+				  "id": 3,
 				  "children": [],
 				  "rpos": {
 					"x": 0,
 					"y": 0,
 					"z": 0
 				  },
-				  "gltf": "/games/test/content/glb/RobotExpressive.glb"
+				  "cdn": "Game",
+				  "gltf": "/content/glb/RobotExpressive.glb"
 				}
 			  }
 			}
@@ -38,31 +51,44 @@
 		}
 	  },
 	  {
-		"type": "Actor",
-		"src": "/engine/src/actor/actor.js",
+		"meta": {
+		  "cdn": "Engine",
+		  "type": "Actor",
+		  "src": "/src/actor/actor.js"
+		},
 		"config": {
+		  "id": 4,
 		  "root": {
-			"type": "Model",
-			"src": "/engine/src/component/3d/model.js",
+			"meta": {
+			  "cdn": "Engine",
+			  "type": "Model",
+			  "src": "/src/component/3d/model.js"
+			},
 			"config": {
+			  "id": 5,
 			  "children": [],
 			  "rpos": {
 				"x": 0,
 				"y": 0,
 				"z": 0
 			  },
-			  "gltf": "/games/test/content/glb/RobotExpressive.glb",
+			  "gltf": "/content/glb/RobotExpressive.glb",
 			  "anim": {
-				"type": "RobotAnimationMixer",
-				"src": "/games/test/src/RobotAnimationMixer.js",
+				"meta": {
+				  "cdn": "Game",
+				  "type": "RobotAnimationMixer",
+				  "src": "/src/RobotAnimationMixer.js"
+				},
 				"config": {
+				  "id": 6,
 				  "children": [],
 				  "rpos": {
 					"x": 0,
 					"y": 0,
 					"z": 0
 				  },
-				  "gltf": "/games/test/content/glb/RobotExpressive.glb"
+				  "cdn": "Game",
+				  "gltf": "/content/glb/RobotExpressive.glb"
 				}
 			  }
 			}
@@ -75,31 +101,44 @@
 		}
 	  },
 	  {
-		"type": "Actor",
-		"src": "/engine/src/actor/actor.js",
+		"meta": {
+		  "cdn": "Engine",
+		  "type": "Actor",
+		  "src": "/src/actor/actor.js"
+		},
 		"config": {
+		  "id": 7,
 		  "root": {
-			"type": "Model",
-			"src": "/engine/src/component/3d/model.js",
+			"meta": {
+			  "cdn": "Engine",
+			  "type": "Model",
+			  "src": "/src/component/3d/model.js"
+			},
 			"config": {
+			  "id": 8,
 			  "children": [],
 			  "rpos": {
 				"x": 0,
 				"y": 0,
 				"z": 0
 			  },
-			  "gltf": "/games/test/content/glb/RobotExpressive.glb",
+			  "gltf": "/content/glb/RobotExpressive.glb",
 			  "anim": {
-				"type": "DancingRobotAnimationMixer",
-				"src": "/games/test/src/RobotAnimationMixer.js",
+				"meta": {
+				  "cdn": "Game",
+				  "type": "DancingRobotAnimationMixer",
+				  "src": "/src/RobotAnimationMixer.js"
+				},
 				"config": {
+				  "id": 9,
 				  "children": [],
 				  "rpos": {
 					"x": 0,
 					"y": 0,
 					"z": 0
 				  },
-				  "gltf": "/games/test/content/glb/RobotExpressive.glb"
+				  "cdn": "Game",
+				  "gltf": "/content/glb/RobotExpressive.glb"
 				}
 			  }
 			}

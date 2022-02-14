@@ -17,12 +17,10 @@ class Model extends Component {
                 this.world.scene.add(this.#model);
             }
 
-            const animConfig = init.config['anim'];
-            if(animConfig != null) {
-                EntityFactory.make(this, animConfig.type, animConfig.src, animConfig.config).then(anim => {
-                    this.#anim = anim;
-                });
-            }
+            const animJson = init.config['anim']
+            EntityFactory.make(this, animJson).then(anim => {
+                this.#anim = anim;
+            });
         });
     }
 

@@ -8,11 +8,11 @@ class Component extends Entity {
 
 	constructor(init) {
 		super(init);
-
+		
 		this.#children = [];
-		const childrenConfig = init.config['children'];
-		for(const childConfig of childrenConfig) {
-			EntityFactory.make(this, childConfig.type, childConfig.src, childConfig.config).then(component => {
+		const childrenJson = init.config['children']
+		for(const childJson of childrenJson) {
+			EntityFactory.make(this, childJson).then(component => {
 				this.#children.push(component);
 			});
 		}

@@ -10,6 +10,7 @@ class Engine {
 	constructor() {
 		this.#time = Date.now();
 		this.#world = new World(this);
+		
 		if(IS_BROWSER) {
 			const snailCanvas = document.getElementById('snail-canvas');
 			this.#renderer = new Renderer(snailCanvas);

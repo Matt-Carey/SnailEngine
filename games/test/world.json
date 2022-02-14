@@ -19,7 +19,7 @@
   "levels": [
     {
 	  "name": "level_0",
-	  "path": "/games/test/levels/level_0.json"
+	  "path": "/levels/level_0.json"
     }
   ]
 }
