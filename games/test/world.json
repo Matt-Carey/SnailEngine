@@ -13,7 +13,8 @@
     },
     "ambient":
     {
-      "color": "rgb(255, 255, 255)"
+      "color": "rgb(255, 255, 255)",
+      "intensity": 1
     }
   },
   "levels": [

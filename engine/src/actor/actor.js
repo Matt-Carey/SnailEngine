@@ -5,6 +5,7 @@ import { Vector } from './../math/vector.js';
 class Actor extends Entity {
 	#root = null;
 	#pos = new Vector(0, 0, 0);
+	#scale = new Vector(1, 1, 1);
 
 	constructor(init) {
 		super(init);
@@ -15,14 +16,22 @@ class Actor extends Entity {
 		});
 		
 		const pos = init.config['pos'];
-		this.#pos = new Vector(pos.x, pos.y, pos.z);
+		if(pos != null) {
+			this.#pos = new Vector(pos.x, pos.y, pos.z);
+		}
+
+		const scale = init.config['scale'];
+		if(scale != null) {
+			this.#scale = new Vector(scale.x, scale.y, scale.z);
+		}
 	}
 
 	toJSON() {
 		const json = super.toJSON();
 		json['config'] = {
 			root: this.#root?.toJSON(),
-			pos: this.#pos.toJSON()
+			pos: this.#pos.toJSON(),
+			scale: this.#scale.toJSON()
 		}
 		return json;
 	}
@@ -33,6 +42,10 @@ class Actor extends Entity {
 
 	get position() {
 		return this.#pos;
+	}
+
+	get scale() {
+		return this.#scale;
 	}
 	
 	tick(dt) {

@@ -5,21 +5,29 @@ import { Vector } from '../math/vector.js';
 class Component extends Entity {
 	#children = [];
 	#rPos = new Vector(0, 0, 0);
+	#rScale = new Vector(1, 1, 1);
 
 	constructor(init) {
 		super(init);
 		
 		this.#children = [];
-		const childrenJson = init.config['children']
-		for(const childJson of childrenJson) {
-			EntityFactory.make(this, childJson).then(component => {
-				this.#children.push(component);
-			});
+		const childrenJson = init.config['children'];
+		if(childrenJson != null) {
+			for(const childJson of childrenJson) {
+				EntityFactory.make(this, childJson).then(component => {
+					this.#children.push(component);
+				});
+			}
 		}
 		
 		const rPos = init.config['rPos'];
 		if(rPos != null) {
 			this.#rPos = new Vector(rPos.x, rPos.y, rPos.z);
+		}
+
+		const rScale = init.config['rScale'];
+		if(rScale != null) {
+			this.#rScale = new Vector(rScale.x, rScale.y, rScale.z);
 		}
 	}
 
@@ -27,7 +35,8 @@ class Component extends Entity {
 		const json = super.toJSON();
 		json['config'] = {
 			children: [],
-			rpos: this.#rPos.toJSON()
+			rpos: this.#rPos.toJSON(),
+			rScale: this.#rScale.toJSON()
 		}
 		for(const child of this.#children) {
 			json.config.children.push(child.toJSON());
@@ -48,6 +57,11 @@ class Component extends Entity {
 	get position() {
 		const owner = this.owner;
 		return Vector.add(owner.position, this.#rPos);
+	}
+
+	get scale() {
+		const owner = this.owner;
+		return Vector.multiply(owner.scale, this.#rScale);
 	}
 	
 	tick(dt) {

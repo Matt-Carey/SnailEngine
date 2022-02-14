@@ -13,7 +13,7 @@ class Scene extends ThreeScene {
 		this.fog = new Fog(fogConfig.color, fogConfig.near, fogConfig.far);
 
         const ambientConfig = config['ambient'];
-        this.#light = new AmbientLight(ambientConfig.color);
+        this.#light = new AmbientLight(ambientConfig.color, ambientConfig.intensity);
         this.add(this.#light);
     }
 }

@@ -16,30 +16,23 @@
 			},
 			"config": {
 			  "id": 2,
-			  "children": [],
-			  "rpos": {
-				"x": 0,
-				"y": 0,
-				"z": 0
-			  },
-			  "gltf": "/content/glb/RobotExpressive.glb",
+			  "gltf": "/content/glb/bee.glb",
 			  "anim": {
 				"meta": {
 				  "cdn": "Game",
-				  "type": "RunningRobotAnimationMixer",
-				  "src": "/src/RobotAnimationMixer.js"
+				  "type": "BeeAnimationMixer",
+				  "src": "/src/BeeAnimationMixer.js"
 				},
 				"config": {
 				  "id": 3,
-				  "children": [],
-				  "rpos": {
-					"x": 0,
-					"y": 0,
-					"z": 0
-				  },
 				  "cdn": "Game",
-				  "gltf": "/content/glb/RobotExpressive.glb"
+				  "gltf": "/content/glb/bee.glb"
 				}
+			  },
+			  "rScale": {
+				"x": 0.2,
+				"y": 0.2,
+				"z": 0.2
 			  }
 			}
 		  },
@@ -66,12 +59,6 @@
 			},
 			"config": {
 			  "id": 5,
-			  "children": [],
-			  "rpos": {
-				"x": 0,
-				"y": 0,
-				"z": 0
-			  },
 			  "gltf": "/content/glb/RobotExpressive.glb",
 			  "anim": {
 				"meta": {
@@ -81,12 +68,6 @@
 				},
 				"config": {
 				  "id": 6,
-				  "children": [],
-				  "rpos": {
-					"x": 0,
-					"y": 0,
-					"z": 0
-				  },
 				  "cdn": "Game",
 				  "gltf": "/content/glb/RobotExpressive.glb"
 				}
@@ -116,12 +97,6 @@
 			},
 			"config": {
 			  "id": 8,
-			  "children": [],
-			  "rpos": {
-				"x": 0,
-				"y": 0,
-				"z": 0
-			  },
 			  "gltf": "/content/glb/RobotExpressive.glb",
 			  "anim": {
 				"meta": {
@@ -131,12 +106,6 @@
 				},
 				"config": {
 				  "id": 9,
-				  "children": [],
-				  "rpos": {
-					"x": 0,
-					"y": 0,
-					"z": 0
-				  },
 				  "cdn": "Game",
 				  "gltf": "/content/glb/RobotExpressive.glb"
 				}
@@ -147,6 +116,37 @@
 			"x": 5,
 			"y": -3,
 			"z": -10
+		  }
+		}
+	  },
+	  {
+		"meta": {
+		  "cdn": "Engine",
+		  "type": "Actor",
+		  "src": "/src/actor/actor.js"
+		},
+		"config": {
+		  "id": 10,
+		  "root": {
+			"meta": {
+			  "cdn": "Engine",
+			  "type": "Model",
+			  "src": "/src/component/3d/model.js"
+			},
+			"config": {
+			  "id": 11,
+			  "gltf": "/content/glb/block.glb"
+			}
+		  },
+		  "pos": {
+			"x": 17.5,
+			"y": -6,
+			"z": -17.5
+		  },
+		  "scale": {
+			"x": 17.5,
+			"y": 3,
+			"z": 10
 		  }
 		}
 	  }

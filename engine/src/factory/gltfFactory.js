@@ -51,6 +51,10 @@ class GLTFFactory {
             }
             return await GLTFFactory.get(src).then(result => {
 				const model = result.scene;
+				model.traverse( child => {
+					// For now, get rid of metalness, it makes lighting weird...
+					if ( child.material ) child.material.metalness = 0;
+				} );
 				const clone = SkeletonUtils.clone(model);
 				return clone;
 			});

@@ -18,9 +18,11 @@ class Model extends Component {
             }
 
             const animJson = init.config['anim']
-            EntityFactory.make(this, animJson).then(anim => {
-                this.#anim = anim;
-            });
+            if(animJson != null) {
+                EntityFactory.make(this, animJson).then(anim => {
+                    this.#anim = anim;
+                });
+            }
         });
     }
 
@@ -33,9 +35,12 @@ class Model extends Component {
 
     tick(dt) {
         super.tick(dt);
-        const pos = this.position;
         if(this.#model != null) {
-            this.#model.position.set(pos.x, pos.y, pos.z);
+            const position = this.position;
+            this.#model.position.set(position.x, position.y, position.z);
+
+            const scale = this.scale;
+            this.#model.scale.set(scale.x, scale.y, scale.z);
         }
         if(this.#anim != null) {
             this.#anim.tick(dt);

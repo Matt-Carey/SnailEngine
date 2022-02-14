@@ -29,6 +29,10 @@ class Vector {
 	static add(A, B) {
 		return new Vector(A.x + B.x, A.y + B.y, A.z + B.z);
 	}
+
+	static multiply(A, B) {
+		return new Vector(A.x * B.x, A.y * B.y, A.z * B.z);
+	}
 }
 
 export { Vector };
