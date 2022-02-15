@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "http://localhost:8000/*": ["./engine/*"]
+      }
+    }
+  }

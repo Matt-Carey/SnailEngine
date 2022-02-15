@@ -1,6 +1,6 @@
 {
     "cdn": {
-        "Engine": "/engine",
-        "Game": "/games/test"
+        "Engine": "http://localhost:8000",
+        "Game": "http://localhost:8080"
     }
 }

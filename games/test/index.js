@@ -1,6 +1,6 @@
-import { Engine } from './engine/src/engine.js';
-import { IS_NODE } from './engine/src/util/env.js';
-import { ModuleFactory } from './engine/src/factory/moduleFactory.js';
+import { Engine } from 'http://localhost:8000/src/engine.js';
+import { IS_NODE } from 'http://localhost:8000/src/util/env.js';
+import { ModuleFactory } from 'http://localhost:8000/src/factory/moduleFactory.js';
 
 ;(function() {
 
