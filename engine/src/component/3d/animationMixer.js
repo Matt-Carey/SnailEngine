@@ -7,7 +7,7 @@ class AnimationMixer extends Component {
     #gltf = null;
     #anims = null;
     #animMixer = null;
-    _actions = [];
+    #actions = {};
 
     constructor(init) {
         super(init);
@@ -18,9 +18,10 @@ class AnimationMixer extends Component {
             if(this.owner.model != null) {
                 this.#animMixer = new ThreeAnimationMixer(this.owner.model);
                 for (const anim of this.#anims) {
-                    this._actions[anim.name] = this.#animMixer.clipAction(anim);
+                    this.#actions[anim.name] = this.#animMixer.clipAction(anim);
                 }
             }
+            this.#animMixer.addEventListener( 'finished', (e) => this._onFinishedAnim(e) );
             this._onMixerReady();
         });
     }
@@ -37,9 +38,18 @@ class AnimationMixer extends Component {
         }
     }
 
+    get actions() {
+        return this.#actions;
+    }
+
     _onMixerReady() {
 
     }
+
+    _onFinishedAnim(e) {
+        
+    }
+
 }
 
 export { AnimationMixer };

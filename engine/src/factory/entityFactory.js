@@ -11,7 +11,7 @@ class EntityFactory {
 					return new objClass({owner, meta, config});
 				}
 			}
-			return nullptr;
+			return null;
 		});
 	}
 }

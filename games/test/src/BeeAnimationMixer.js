@@ -1,16 +1,12 @@
-import { AnimationMixer } from "http://localhost:8000/src/component/3d/animationMixer.js";
+import { AnimationMixer } from 'http://localhost:8000/src/component/3d/animationMixer.js';
 
 class BeeAnimationMixer extends AnimationMixer {
     _onMixerReady() {
         super._onMixerReady();
-        const actionToPlay = this._actions[this.action];
+        const actionToPlay = this.actions['hover'];
         if(actionToPlay != null) {
             actionToPlay.play();
         }
-    }
-
-    get action() {
-        return 'hover';
     }
 }
 

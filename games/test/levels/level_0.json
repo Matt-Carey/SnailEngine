@@ -37,7 +37,7 @@
 			}
 		  },
 		  "pos": {
-			"x": -5,
+			"x": 5,
 			"y": -3,
 			"z": -10
 		  }
@@ -59,7 +59,7 @@
 			},
 			"config": {
 			  "id": 5,
-			  "gltf": "/content/glb/RobotExpressive.glb",
+			  "gltf": "/content/glb/robot.glb",
 			  "anim": {
 				"meta": {
 				  "cdn": "Game",
@@ -69,7 +69,7 @@
 				"config": {
 				  "id": 6,
 				  "cdn": "Game",
-				  "gltf": "/content/glb/RobotExpressive.glb"
+				  "gltf": "/content/glb/robot.glb"
 				}
 			  }
 			}
@@ -97,23 +97,28 @@
 			},
 			"config": {
 			  "id": 8,
-			  "gltf": "/content/glb/RobotExpressive.glb",
+			  "gltf": "/content/glb/troll.glb",
+			  "rScale":{
+				  "x": 75,
+				  "y": 75,
+				  "z": 75
+			  },
 			  "anim": {
 				"meta": {
 				  "cdn": "Game",
-				  "type": "DancingRobotAnimationMixer",
-				  "src": "/src/RobotAnimationMixer.js"
+				  "type": "TrollAnimationMixer",
+				  "src": "/src/TrollAnimationMixer.js"
 				},
 				"config": {
 				  "id": 9,
 				  "cdn": "Game",
-				  "gltf": "/content/glb/RobotExpressive.glb"
+				  "gltf": "/content/glb/troll.glb"
 				}
 			  }
 			}
 		  },
 		  "pos": {
-			"x": 5,
+			"x": -5,
 			"y": -3,
 			"z": -10
 		  }

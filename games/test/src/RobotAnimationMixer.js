@@ -1,27 +1,27 @@
-import { AnimationMixer } from "http://localhost:8000/src/component/3d/animationMixer.js";
+import { AnimationMixer } from 'http://localhost:8000/src/component/3d/animationMixer.js';
 
 class RobotAnimationMixer extends AnimationMixer {
     _onMixerReady() {
         super._onMixerReady();
-        const actionToPlay = this._actions[this.action];
+        const actionToPlay = this.actions[this.defaultAction];
         if(actionToPlay != null) {
             actionToPlay.play();
         }
     }
 
-    get action() {
+    get defaultAction() {
         return 'Idle';
     }
 }
 
 class RunningRobotAnimationMixer extends RobotAnimationMixer {
-    get action() {
+    get defaultAction() {
         return 'Running';
     }
 }
 
 class DancingRobotAnimationMixer extends RobotAnimationMixer {
-    get action() {
+    get defaultAction() {
         return 'Dance';
     }
 }
