@@ -5,16 +5,10 @@ class ModuleFactory {
 	static #srcMap = new Map();
 	static #pendingMap = new Map();
 
-	static getNodeModules() {
-		if(IS_NODE) {
-			return ModuleFactory.get('Engine', '/src/util/nodemodules.js');
-		}
-		return null;
-	}
-
     static get(cdn, src) {
         return (async () => {
-			src = Config['cdn'][cdn] + src;
+			const cfg = await Config.get();
+			src = cfg['cdn'][cdn] + src;
 
 			const module = this.#srcMap.get(src);
 			if(module != null) {

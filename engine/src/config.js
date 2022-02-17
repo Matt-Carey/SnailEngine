@@ -1,5 +1,14 @@
 import { JSONFactory } from './factory/jsonFactory.js';
 
-let Config = await JSONFactory.get('/config.json');
+class Config {
+    static #cfg = null;
+
+    static get() {
+        if(Config.#cfg == null) {
+            Config.#cfg = JSONFactory.get('/config.json');
+        }
+        return Config.#cfg;
+    }
+}
 
 export { Config };

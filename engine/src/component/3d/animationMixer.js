@@ -12,18 +12,20 @@ class AnimationMixer extends Component {
     constructor(init) {
         super(init);
 
-        this.#gltf = init.config['gltf'];
-        GLTFFactory.getAnims(this.#gltf).then(anims => {
-            this.#anims = anims;
-            if(this.owner.model != null) {
-                this.#animMixer = new ThreeAnimationMixer(this.owner.model);
-                for (const anim of this.#anims) {
-                    this.#actions[anim.name] = this.#animMixer.clipAction(anim);
+        if(IS_BROWSER) {
+            this.#gltf = init.config['gltf'];
+            GLTFFactory.getAnims(this.#gltf).then(anims => {
+                this.#anims = anims;
+                if(this.owner.model != null) {
+                    this.#animMixer = new ThreeAnimationMixer(this.owner.model);
+                    for (const anim of this.#anims) {
+                        this.#actions[anim.name] = this.#animMixer.clipAction(anim);
+                    }
                 }
-            }
-            this.#animMixer.addEventListener( 'finished', (e) => this._onFinishedAnim(e) );
-            this._onMixerReady();
-        });
+                this.#animMixer.addEventListener( 'finished', (e) => this._onFinishedAnim(e) );
+                this._onMixerReady();
+            });
+        }
     }
 
     toJSON() {

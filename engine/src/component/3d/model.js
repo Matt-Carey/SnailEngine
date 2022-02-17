@@ -1,4 +1,5 @@
 import { Component } from './../component.js';
+import { IS_BROWSER } from '../../util/env.js';
 import { EntityFactory } from './../../factory/EntityFactory.js';
 import { GLTFFactory } from './../../factory/gltfFactory.js';
 
@@ -10,20 +11,22 @@ class Model extends Component {
     constructor(init) {
         super(init);
 
-        this.#gltf = init.config['gltf'];
-        GLTFFactory.getModel(this.#gltf).then(model => {
-            this.#model = model;
-            if(this.#model != null) {
-                this.world.scene.add(this.#model);
-            }
+        if (IS_BROWSER) {
+            this.#gltf = init.config['gltf'];
+            GLTFFactory.getModel(this.#gltf).then(model => {
+                this.#model = model;
+                if(this.#model != null) {
+                    this.world.scene.add(this.#model);
+                }
 
-            const animJson = init.config['anim']
-            if(animJson != null) {
-                EntityFactory.make(this, animJson).then(anim => {
-                    this.#anim = anim;
-                });
-            }
-        });
+                const animJson = init.config['anim']
+                if(animJson != null) {
+                    EntityFactory.make(this, animJson).then(anim => {
+                        this.#anim = anim;
+                    });
+                }
+            });
+        }
     }
 
     toJSON() {

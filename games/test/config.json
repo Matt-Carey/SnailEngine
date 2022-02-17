@@ -1,6 +1,9 @@
 {
     "cdn": {
         "Engine": "http://localhost:8000",
-        "Game": "http://localhost:8080"
+        "Game": "http://localhost:80"
+    },
+    "world": {
+        "startup": "/worlds/world.json"
     }
 }
