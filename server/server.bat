@@ -9,7 +9,7 @@ node --experimental-loader ./http-loader.mjs ./server.js --game %arg1% --world %
 GOTO End1
 
 :No1
-  ECHO Missing Game Path, Ex: "./games/test"
+  ECHO Missing Game Path, Ex: "./../games/test"
 GOTO End1
 :No2
   ECHO Missing World Name, Ex: "worlds/world.json"
