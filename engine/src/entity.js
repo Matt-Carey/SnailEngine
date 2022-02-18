@@ -6,9 +6,9 @@ class Entity {
     #id = null;
 
     constructor(init) {
-        this.#meta = init.meta
-        this.#owner = init.owner
-        this.#id = init.config['id'] ?? UID();
+        this.#meta = init?.json?.meta;
+        this.#owner = init?.owner;
+        this.#id = init?.json?.id ?? UID();
     }
 
     get owner() {
@@ -17,9 +17,8 @@ class Entity {
 
     toJSON() {
         return {
-            meta: this.#meta,
-            owner: this.#owner,
-            id: this.#id
+            "meta" : this.#meta,
+            "id" : this.#id,
         }
     }
 }

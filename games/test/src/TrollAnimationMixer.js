@@ -20,7 +20,7 @@ class TrollAnimationMixer extends AnimationMixer {
     }
 
     _onFinishedAnim(e) {
-        super._onFinishedAnim();
+        super._onFinishedAnim(e);
         this.#playRandomAction();
     }
 }

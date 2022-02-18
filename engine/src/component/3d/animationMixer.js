@@ -3,8 +3,12 @@ import { IS_BROWSER } from '../../util/env.js';
 import { GLTFFactory } from './../../factory/gltfFactory.js';
 import { AnimationMixer as ThreeAnimationMixer } from './../../../3rdparty/three.js/build/three.module.js';
 
+const Defaults = {
+    'gltf': null,
+}
+
 class AnimationMixer extends Component {
-    #gltf = null;
+    #gltf = Defaults.gltf;
     #anims = null;
     #animMixer = null;
     #actions = {};
@@ -12,25 +16,30 @@ class AnimationMixer extends Component {
     constructor(init) {
         super(init);
 
+        this.#gltf = init?.json?.gltf;
+        
         if(IS_BROWSER) {
-            this.#gltf = init.config['gltf'];
-            GLTFFactory.getAnims(this.#gltf).then(anims => {
-                this.#anims = anims;
-                if(this.owner.model != null) {
-                    this.#animMixer = new ThreeAnimationMixer(this.owner.model);
-                    for (const anim of this.#anims) {
-                        this.#actions[anim.name] = this.#animMixer.clipAction(anim);
+            if(this.#gltf != null) {
+                GLTFFactory.getAnims(this.#gltf).then(anims => {
+                    this.#anims = anims;
+                    if(this.owner.model != null) {
+                        this.#animMixer = new ThreeAnimationMixer(this.owner.model);
+                        for (const anim of this.#anims) {
+                            this.#actions[anim.name] = this.#animMixer.clipAction(anim);
+                        }
                     }
-                }
-                this.#animMixer.addEventListener( 'finished', (e) => this._onFinishedAnim(e) );
-                this._onMixerReady();
-            });
+                    this.#animMixer.addEventListener( 'finished', (e) => this._onFinishedAnim(e) );
+                    this._onMixerReady();
+                });
+            }
         }
     }
 
     toJSON() {
         const json = super.toJSON();
-        json.config['gltf'] = this.#gltf;
+        if(this.#gltf != Defaults.gltf) {
+            json.gltf = this.#gltf;
+        }
         return json;
     }
 

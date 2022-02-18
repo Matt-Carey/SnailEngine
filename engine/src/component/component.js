@@ -2,16 +2,21 @@ import { Entity } from './../entity.js';
 import { EntityFactory } from './../factory/EntityFactory.js'
 import { Vector } from '../math/vector.js';
 
+const Defaults = {
+	'children': [],
+	'rPos': new Vector(0, 0, 0),
+	'rScale': new Vector(1, 1, 1),
+}
+
 class Component extends Entity {
-	#children = [];
-	#rPos = new Vector(0, 0, 0);
-	#rScale = new Vector(1, 1, 1);
+	#children = Defaults.children;
+	#rPos = Defaults.rPos;
+	#rScale = Defaults.rScale;
 
 	constructor(init) {
 		super(init);
 		
-		this.#children = [];
-		const childrenJson = init.config['children'];
+		const childrenJson = init?.json?.children;
 		if(childrenJson != null) {
 			for(const childJson of childrenJson) {
 				EntityFactory.make(this, childJson).then(component => {
@@ -20,12 +25,12 @@ class Component extends Entity {
 			}
 		}
 		
-		const rPos = init.config['rPos'];
+		const rPos = init?.json?.rPos;
 		if(rPos != null) {
 			this.#rPos = new Vector(rPos.x, rPos.y, rPos.z);
 		}
 
-		const rScale = init.config['rScale'];
+		const rScale = init?.json?.rScale;
 		if(rScale != null) {
 			this.#rScale = new Vector(rScale.x, rScale.y, rScale.z);
 		}
@@ -33,14 +38,21 @@ class Component extends Entity {
 
 	toJSON() {
 		const json = super.toJSON();
-		json['config'] = {
-			children: [],
-			rpos: this.#rPos.toJSON(),
-			rScale: this.#rScale.toJSON()
+		if(this.#children != Defaults.children) {
+			json.children = [];
+			for(const child of this.#children) {
+				json.children.push(child.toJSON());
+			}
 		}
-		for(const child of this.#children) {
-			json.config.children.push(child.toJSON());
+
+		if(!Vector.equals(this.#rPos, Defaults.rPos)) {
+			json.rPos = this.#rPos.toJSON();
 		}
+
+		if(!Vector.equals(this.#rScale, Defaults.rScale)) {
+			json.rScale = this.#rScale.toJSON();
+		}
+
 		return json;
 	}
 

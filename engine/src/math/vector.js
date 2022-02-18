@@ -26,6 +26,10 @@ class Vector {
 	get z() { return this.#z; }
 	set z(z) { this.#z = z; }
 
+	static equals(A, B) {
+		return A.x === B.x && A.y === B.y && A.z === B.z;
+	}
+
 	static add(A, B) {
 		return new Vector(A.x + B.x, A.y + B.y, A.z + B.z);
 	}
