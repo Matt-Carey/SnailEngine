@@ -1,26 +1,51 @@
-import { UID } from './util/uid.js';
-
 class Entity {
+    #world = null;
+    #UUID = null;
     #meta = null;
 	#owner = null;
-    #id = null;
 
     constructor(init) {
-        this.#meta = init?.json?.meta;
-        this.#owner = init?.owner;
-        this.#id = init?.json?.id ?? UID();
+        this.#world = init.world;
+        this.#UUID = init.UUID;
+        this.#meta = init.meta;
+    }
+
+    fromJSON(json) {
+        if(json.owner != null) {
+            this.#owner = json.owner;
+        }
+    }
+
+    toJSON() {
+        const json = {};
+        json.owner = this.#owner;
+        return json;
+    }
+
+    get world() {
+        return this.#world;
+    }
+
+    get UUID() {
+        return this.#UUID;
+    }
+
+    get meta() {
+        return this.#meta;
     }
 
     get owner() {
 		return this.#owner;
 	}
 
-    toJSON() {
-        return {
-            "meta" : this.#meta,
-            "id" : this.#id,
-        }
+    get owningEntity() {
+        return this.world.getEntity(this.owner);
     }
+
+    tick(dt) {
+
+    }
+
 }
 
 export { Entity };

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+	<entity cdn="Engine" type="Actor" src="/src/actor/actor.js">
+	</entity>
+	<entity cdn="Engine" type="PointLight" src="/src/component/3d/light/pointLight.js">
+		<owner type="entity">0</owner>
+		<color>
+			<r>1.0</r>
+			<g>0.8</g>
+			<b>0.7</b>
+		</color>
+	</entity>
+</template>

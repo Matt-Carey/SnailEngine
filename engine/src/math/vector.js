@@ -9,6 +9,12 @@ class Vector {
 		this.#z = z;
 	}
 
+	fromJSON(json) {
+		this.#x = json.x;
+		this.#y = json.y;
+		this.#z = json.z;
+	}
+
 	toJSON() {
 		return {
 			x: this.#x,

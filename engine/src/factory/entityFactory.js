@@ -1,13 +1,15 @@
 import { ModuleFactory } from './moduleFactory.js';
 
 class EntityFactory {
-	static make(owner, json) {
-		const meta = json.meta;
+	static make(world, UUID, meta, json) {
 		return ModuleFactory.get(meta.cdn, meta.src).then(result => {
 			if(result != null) {
-				const objClass = result[meta.type];
-				if(objClass != null) {
-					return new objClass({owner, json});
+				const entityClass = result[meta.type];
+				if(entityClass != null) {
+					const entity = new entityClass({world, UUID, meta});
+					entity.fromJSON(json);
+					world.addEntity(entity);
+					return entity;
 				}
 			}
 			return null;

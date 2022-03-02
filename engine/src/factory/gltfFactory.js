@@ -8,69 +8,62 @@ class GLTFFactory {
     static #srcMap = new Map();
 	static #pendingMap = new Map();
 
-    static get(src) {
-        return (async () => {
-            
-            if(IS_NODE) {
-				// GLTF should not be loaded on server
-                return null;
-            }
+    static async get(src) {
+        if(IS_NODE) {
+			// GLTF should not be loaded on server
+			return null;
+		}
 
-			const GLTF = this.#srcMap.get(src);
-			if(GLTF != null) {
-				return GLTF;
-			}
-			
-			const pendingGLTF = this.#pendingMap.get(src);
-			if(pendingGLTF != null) {
-				pendingGLTF.then(result => {
-					return this.#srcMap.get(src);
-				});
-				return pendingGLTF;
-			}
+		const GLTF = this.#srcMap.get(src);
+		if(GLTF != null) {
+			return GLTF;
+		}
+		
+		const pendingGLTF = this.#pendingMap.get(src);
+		if(pendingGLTF != null) {
+			pendingGLTF.then(result => {
+				return this.#srcMap.get(src);
+			});
+			return pendingGLTF;
+		}
 
-            const pending = new Promise((resolve) => {
-                this.#loader.load(src, (result) => {
-					this.#pendingMap.delete(src);
-					this.#srcMap.set(src, result);
-					resolve(result);
-				});
-            });
+		const pending = new Promise((resolve) => {
+			this.#loader.load(src, (result) => {
+				this.#pendingMap.delete(src);
+				this.#srcMap.set(src, result);
+				resolve(result);
+			});
+		});
 
-			this.#pendingMap.set(src, pending);
-			
-			return await Promise.resolve(pending);
-		})();
+		this.#pendingMap.set(src, pending);
+		
+		return await Promise.resolve(pending);
     }
 
-	static getModel(src) {
-		return (async () => {
-			if(IS_NODE) {
-				// GLTF should not be loaded on server
-                return null;
-            }
-            return await GLTFFactory.get(src).then(result => {
-				const model = result.scene;
-				model.traverse( child => {
-					// For now, get rid of metalness, it makes lighting weird...
-					if ( child.material ) child.material.metalness = 0;
-				} );
-				const clone = SkeletonUtils.clone(model);
-				return clone;
-			});
-		})();
+	static async getModel(src) {
+		if(IS_NODE) {
+			// GLTF should not be loaded on server
+			return null;
+		}
+		return await GLTFFactory.get(src).then(result => {
+			const model = result.scene;
+			model.traverse( child => {
+				// For now, get rid of metalness, it makes lighting weird...
+				if ( child.material ) child.material.metalness = 0;
+			} );
+			const clone = SkeletonUtils.clone(model);
+			return clone;
+		});
 	}
 
-	static getAnims(src) {
-		return (async () => {
-			if(IS_NODE) {
-				// GLTF should not be loaded on server
-                return null;
-            }
-            return await GLTFFactory.get(src).then(result => {
-				return result.animations;
-			});
-		})();
+	static async getAnims(src) {
+		if(IS_NODE) {
+			// GLTF should not be loaded on server
+			return null;
+		}
+		return await GLTFFactory.get(src).then(result => {
+			return result.animations;
+		});
 	}
 }
 

@@ -1,6 +1,7 @@
 import { Engine } from 'http://localhost:8000/src/engine.js';
 
 global.nodeimports = await import('./modules.mjs');
+global.crypto = await import('crypto');
 
 ;(function() {
 	console.log('Command Line Args:', process.argv)

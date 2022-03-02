@@ -1,4 +1,4 @@
-import { AnimationMixer } from 'http://localhost:8000/src/component/3d/animationMixer.js';
+import { AnimationMixer } from 'http://localhost:8000/src/component/3d/model/animationMixer.js';
 
 class BeeAnimationMixer extends AnimationMixer {
     _onMixerReady() {

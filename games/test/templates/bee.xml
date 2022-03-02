@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+	<entity cdn="Engine" type="Actor" src="/src/actor/actor.js">
+	</entity>
+	<entity cdn="Engine" type="Model" src="/src/component/3d/model/model.js">
+		<owner type="entity">0</owner>
+		<gltf>/content/glb/bee.glb</gltf>
+		<rScale>
+			<x>0.2</x>
+			<y>0.2</y>
+			<z>0.2</z>
+		</rScale>
+	</entity>
+	<entity cdn="Game" type="BeeAnimationMixer" src="/src/BeeAnimationMixer.js">
+		<owner type="entity">1</owner>
+		<gltf>/content/glb/bee.glb</gltf>
+	</entity>
+</template>

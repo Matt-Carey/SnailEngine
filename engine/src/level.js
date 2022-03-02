@@ -1,5 +1,5 @@
 import { EntityFactory } from './factory/EntityFactory.js';
-import { diff } from './util/diff.js';
+import { TemplateFactory } from './factory/templateFactory.js';
 
 class Level {
 	#world = null;
@@ -7,28 +7,24 @@ class Level {
 
 	constructor(world, json) {
 		this.#world = world;
-		for(const entityJson of json.entities) {
-			EntityFactory.make(this, entityJson).then(entity => {
-				this.#entities.push(entity);
+		for(const templateJson of json.templates) {
+			const templatePath = templateJson.path;
+			const templateOverrides = templateJson.overrides;
+			TemplateFactory.get(templatePath).then(template => {
+				template = JSON.parse(JSON.stringify(template));
+				for(const key in template.entities) {
+					const entity = template.entities[key];
+					EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json).then(entity => {
+						const override = templateOverrides[key];
+						if(override != null) {
+							entity.fromJSON(override);
+						}
+						this.#entities.push(entity);
+					});
+				}
 			});
 		}
 		return this;
-	}
-
-	toJSON() {
-		const json = {
-			'entities': []
-		};
-		for(const entity of this.#entities) {
-			json.entities.push(entity.toJSON());
-		}
-		return json;
-	}
-	
-	tick(dt) {
-		for(const entity of this.#entities) {
-			entity.tick(dt);
-		}
 	}
 
 	get world() {
