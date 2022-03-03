@@ -3,18 +3,19 @@
   {
     "background":
     {
-      "color": "rgb(155,155,155)"
+      "r": 0.6,
+      "g": 0.6,
+      "b": 0.6
     },
     "fog":
     {
-      "color": "rgb(155, 155, 155)",
+      "color": {
+        "r": 0.6,
+        "g": 0.6,
+        "b": 0.6
+      },
       "near": 20,
       "far": 1000
-    },
-    "ambient":
-    {
-      "color": "rgb(255, 255, 255)",
-      "intensity": 1
     }
   },
   "levels": [

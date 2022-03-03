@@ -4,6 +4,12 @@
         "Game": "http://localhost:80"
     },
     "world": {
-        "startup": "/worlds/world.json"
+        "startup": "http://localhost:8080",
+        "_startup": "worlds/world.json"
+    },
+    "server": {
+        "cors": {
+            "origin": "*"
+        }
     }
 }

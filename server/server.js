@@ -19,7 +19,7 @@ global.crypto = await import('crypto');
 	}
 
 	(async () => {
-		const { fs, http, express, Server } = global.nodeimports;
+		const { fs } = global.nodeimports;
 
 		const gamePath = process.argv[gameIndex];
 		if (!fs.existsSync(gamePath)) {
@@ -35,18 +35,6 @@ global.crypto = await import('crypto');
 		}
 
 		global.gamePath = gamePath;
-
-		const app = express();
-		const server = http.createServer(app);
-		const io = new Server(server);
-
-		io.on('connection', (socket) => {
-			console.log('a user connected');
-		});
-
-		server.listen(8080, () => {
-			console.log('listening on *:8080');
-		});
 
 		const engine = new Engine();
 		engine.world.load(worldFile);

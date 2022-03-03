@@ -1,5 +1,6 @@
 import { EntityFactory } from './factory/EntityFactory.js';
 import { TemplateFactory } from './factory/templateFactory.js';
+import { UUID } from './../3rdparty/uuid/dist/uuidv4.js';
 
 class Level {
 	#world = null;
@@ -22,6 +23,11 @@ class Level {
 						this.#entities.push(entity);
 					});
 				}
+			});
+		}
+		for(const entity of json.entities) {
+			EntityFactory.make(this.#world, UUID.get(), entity.meta, entity.json).then(entity => {
+				this.#entities.push(entity);
 			});
 		}
 		return this;

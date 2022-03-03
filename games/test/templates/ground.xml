@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<template>
-	<entity cdn="Engine" type="Actor" src="/src/actor/actor.js">
-	</entity>
-	<entity cdn="Engine" type="Model" src="/src/component/3d/model/model.js">
-		<owner type="entity">0</owner>
-		<gltf>/content/glb/block.glb</gltf>
-	</entity>
-</template>

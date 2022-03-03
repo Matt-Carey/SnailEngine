@@ -35,36 +35,62 @@
 				}
 			}
 		]
-	  },
-	  {
-		"path": "/templates/ground.xml",
-		"overrides": [
-			{
-				"pos": {
+	  }
+	],
+	"entities": [
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "PointLight",
+				"src": "/src/component/3d/light/pointLight.js"
+			},
+			"json": {
+				"color":{
+					"r": 0.5,
+					"g": 0.5,
+					"b": 0.65
+				},
+				"rPos": {
+					"x": -5,
+					"y": 0,
+					"z": -10
+				}
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "AmbientLight",
+				"src": "/src/component/3d/light/ambientLight.js"
+			},
+			"json": {
+				"color": {
+					"r": 0.8,
+					"g": 0.7,
+					"b": 0.65
+				}
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "Model",
+				"src": "/src/component/3d/model/model.js"
+			},
+			"json": {
+				"gltf": "/content/glb/block.glb",
+				"rPos": {
 					"x": 15,
 					"y": -5,
 					"z": -17.5
 				},
-				"scale": {
+				"rScale": {
 					"x": 15,
 					"y": 2,
 					"z": 10
 				}
 			}
-		]
-	  },
-	  {
-		"path": "/templates/light.xml",
-		"overrides": [
-			{
-				"pos": {
-					"x": 0,
-					"y": 0,
-					"z": -10
-				}
-			}
-		]
-	  }
+		}
 	]
   }
   

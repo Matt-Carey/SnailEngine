@@ -23,7 +23,7 @@ class Component extends Entity {
 
 	toJSON() {
 		const json = super.toJSON();
-		
+
 		json.rPos = this.#rPos.toJSON();
 		json.rScale = this.#rScale.toJSON();
 
@@ -32,12 +32,12 @@ class Component extends Entity {
 
 	get position() {
 		const owner = this.owningEntity;
-		return Vector.add(owner.position, this.#rPos);
+		return owner != null ? Vector.add(owner.position, this.#rPos) : this.#rPos;
 	}
 
 	get scale() {
 		const owner = this.owningEntity;
-		return Vector.multiply(owner.scale, this.#rScale);
+		return owner != null ? Vector.multiply(owner.scale, this.#rScale) : this.#rScale;
 	}
 	
 }

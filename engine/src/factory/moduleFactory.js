@@ -1,4 +1,3 @@
-import { IS_NODE } from '../util/env.js';
 import { Config } from '../config.js';
 
 class ModuleFactory {

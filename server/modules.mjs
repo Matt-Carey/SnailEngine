@@ -5,4 +5,4 @@ import { Server } from 'socket.io';
 import express from 'express';
 import favicon from 'serve-favicon';
 
-export { fs, path, http, Server, express, favicon };
+export { fs, path, http, Server as ServerSocket, express, favicon };
