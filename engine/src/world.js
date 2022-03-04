@@ -1,5 +1,6 @@
 import { Level } from './level.js';
 import { Scene } from './render/scene.js';
+import { PhysicsWorld } from './physics/physicsWorld.js'
 import { Config } from './config.js';
 import { IS_BROWSER, IS_NODE } from './util/env.js'
 import { EntityFactory } from './factory/entityFactory.js';
@@ -10,46 +11,49 @@ import { Delegate } from './util/delegate.js';
 class World {
     #engine = null;
     #scene = null;
+    #physics = null;
     #levels = new Map();
 
     #onEntityAddedMap = new Map();
     #entityMap = new Map();
     #ownershipMap = new Map();
 
-    #socket = null;
-    #socketMap = null;
-
 	constructor(engine) {
         this.#engine = engine;
 
+        this.#scene = new Scene();
+        this.#physics = new PhysicsWorld();
+
         if(IS_NODE) {
-			const { http, express, ServerSocket } = global.nodeimports;
-			const app = express();
-			const server = http.createServer(app);
-            Config.get().then(cfg => {
-                this.#socket = new ServerSocket(server, { cors: { origin: cfg.server.cors.origin }});
+			const { http, geckos } = global.nodeimports;
+            const server = http.createServer()
 
-                this.#socket.on('connection', (socket) => {
-                    console.log('connection:', socket.id);
-                    socket.emit('scene', JSON.stringify(this.#scene));
+			const io = geckos({
+                cors: {
+                    allowAuthorization: true
+                }
+            });
 
-                    const init = {};
-                    init.entities = [];
-                    for(const [key, value] of this.#entityMap) {
-                        const entity = {};
-                        entity.meta = value.meta;
-                        entity.UUID = value.UUID;
-                        entity.json = value.toJSON();
-                        init.entities.push(entity);
-                    }
-                    socket.emit('init', init);
+            io.addServer(server);
+            io.onConnection(channel => {
+                console.log('connection:', channel.id);
 
-                    this.#socketMap.set(socket.id, socket);
-                });
-    
-                server.listen(8080, () => {
-                    console.log('listening on *:8080');
-                });
+                channel.emit('scene', JSON.stringify(this.#scene));
+
+                const init = {};
+                init.entities = [];
+                for(const [key, value] of this.#entityMap) {
+                    const entity = {};
+                    entity.meta = value.meta;
+                    entity.UUID = value.UUID;
+                    entity.json = value.toJSON();
+                    init.entities.push(entity);
+                }
+                channel.emit('init', init);
+            });
+
+            server.listen(8080, () => {
+                console.log('listening on *:8080');
             });
 		}
 	}
@@ -57,31 +61,39 @@ class World {
     async load(worldURL) {
         // Test if url is an absolute path - if so, connect to the server for world.
         if(IS_BROWSER && /^(?:\/|[a-z]+:\/\/)/.test(worldURL)) {
-            this.#scene = new Scene();
-            ModuleFactory.get("Engine", "/3rdParty/socket.io/socket.io.min.js").then(module => {
-                this.#socket = io(worldURL);
-
-                this.#socket.on('connect', () => {
-                    console.log('connection:', this.#socket.id);
-                });
-
-                this.#socket.on('scene', (json) => {
-                    console.log(json);
-                    this.#scene.fromJSON(JSON.parse(json));
-                })
-
-                this.#socket.on('init', (json) => {
-                    console.log(json);
-                    for(const entity of json.entities) {
-                        EntityFactory.make(this, entity.UUID, entity.meta, entity.json);
+            ModuleFactory.get("Engine", "/3rdParty/geckos.io/geckos.io-client.2.1.8.min.js").then((module) => {
+                const geckos = module.geckos;
+                const split = worldURL.split(":");
+                const options = {};
+                options.url = split[0] + ':' + split[1];
+                if(split.length > 2) {
+                    options.port = parseInt(split[2]);
+                }
+                const channel = geckos(options);
+                channel.onConnect(error => {
+                    if (error) {
+                        console.error(error.message);
                     }
-                });
+                  
+                    // listens for a disconnection
+                    channel.onDisconnect(() => {
 
+                    })
+
+                    channel.on('scene', json => {
+                        this.#scene.fromJSON(JSON.parse(json));
+                    });
+
+                    channel.on('init', json => {
+                        for(const entity of json.entities) {
+                            EntityFactory.make(this, entity.UUID, entity.meta, entity.json);
+                        }
+                    });
+                });
             });
         }
         else {
             JSONFactory.get(worldURL).then(json => {
-                this.#scene = new Scene();
                 this.#scene.fromJSON(json.scene);
                 for(const level of json.levels) {
                     JSONFactory.get(level.path).then(json => {
@@ -94,6 +106,10 @@ class World {
 
     get scene() {
         return this.#scene;
+    }
+
+    get physics() {
+        return this.#physics;
     }
 	
 	tick(dt) {

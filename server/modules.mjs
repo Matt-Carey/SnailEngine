@@ -1,8 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import http from 'http';
-import { Server } from 'socket.io';
-import express from 'express';
-import favicon from 'serve-favicon';
+import geckos from '@geckos.io/server'
 
-export { fs, path, http, Server as ServerSocket, express, favicon };
+export { fs, path, http, geckos };

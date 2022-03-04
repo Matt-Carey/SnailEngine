@@ -6,10 +6,5 @@
     "world": {
         "startup": "http://localhost:8080",
         "_startup": "worlds/world.json"
-    },
-    "server": {
-        "cors": {
-            "origin": "*"
-        }
     }
 }
