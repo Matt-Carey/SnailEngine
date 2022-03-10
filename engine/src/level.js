@@ -1,4 +1,4 @@
-import { EntityFactory } from './factory/EntityFactory.js';
+import { EntityFactory } from './factory/entityFactory.js';
 import { TemplateFactory } from './factory/templateFactory.js';
 import { UUID } from './util/uuid.js';
 
