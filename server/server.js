@@ -1,3 +1,4 @@
+import { Config } from 'http://localhost:8000/src/config.js';
 import { Engine } from 'http://localhost:8000/src/engine.js';
 
 global.nodeimports = await import('./modules.mjs');
@@ -18,26 +19,25 @@ global.crypto = await import('crypto');
 		return;
 	}
 
-	(async () => {
-		const { fs } = global.nodeimports;
+	const { fs } = global.nodeimports;
 
-		const gamePath = process.argv[gameIndex];
-		if (!fs.existsSync(gamePath)) {
-			console.log("Game directory cannot be found at ", gamePath);
-			return;
-		}
+	const gamePath = process.argv[gameIndex];
+	if (!fs.existsSync(gamePath)) {
+		console.log("Game directory cannot be found at ", gamePath);
+		return;
+	}
 
-		const worldFile = process.argv[worldIndex];
-		const worldPath = gamePath + "/" + worldFile;
-		if(!fs.existsSync(worldPath)) {
-			console.log("World file cannot be found at ", worldPath);
-			return;
-		}
+	const worldFile = process.argv[worldIndex];
+	const worldPath = gamePath + "/" + worldFile;
+	if(!fs.existsSync(worldPath)) {
+		console.log("World file cannot be found at ", worldPath);
+		return;
+	}
 
-		global.gamePath = gamePath;
+	global.gamePath = gamePath;
 
-		const engine = new Engine();
+	Engine.init().then(engine => {
 		engine.world.load(worldFile);
-	})();
+	});
 
 })();

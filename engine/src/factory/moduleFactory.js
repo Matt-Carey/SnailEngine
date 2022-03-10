@@ -1,11 +1,11 @@
-import { Config } from '../config.js';
+import { Config } from './../config.js';
 
 class ModuleFactory {
 	static #srcMap = new Map();
 	static #pendingMap = new Map();
 
     static async get(cdn, src) {
-        const cfg = await Config.get();
+        const cfg = Config.get();
 		src = cfg['cdn'][cdn] + src;
 
 		const module = this.#srcMap.get(src);

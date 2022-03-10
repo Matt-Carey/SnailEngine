@@ -1,3 +1,5 @@
+import { Schema } from './../../3rdparty/geckos.io/typed-array-buffer-schema.js';
+
 class Vector {
 	#x = 0;
 	#y = 0;

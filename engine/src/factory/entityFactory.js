@@ -6,8 +6,9 @@ class EntityFactory {
 			if(result != null) {
 				const entityClass = result[meta.type];
 				if(entityClass != null) {
-					const entity = new entityClass({world, UUID, meta});
+					const entity = new entityClass({class: entityClass, world, UUID, meta});
 					entity.fromJSON(json);
+					entity.default = entity.toJSON();
 					world.addEntity(entity);
 					return entity;
 				}

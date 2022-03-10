@@ -1,6 +1,6 @@
 import { EntityFactory } from './factory/EntityFactory.js';
 import { TemplateFactory } from './factory/templateFactory.js';
-import { UUID } from './../3rdparty/uuid/dist/uuidv4.js';
+import { UUID } from './util/uuid.js';
 
 class Level {
 	#world = null;
@@ -13,13 +13,14 @@ class Level {
 			const templateOverrides = templateJson.overrides;
 			TemplateFactory.get(templatePath).then(template => {
 				template = JSON.parse(JSON.stringify(template));
-				for(const key in template.entities) {
-					const entity = template.entities[key];
-					EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json).then(entity => {
-						const override = templateOverrides[key];
-						if(override != null) {
-							entity.fromJSON(override);
+				for(const key in template) {
+					const entity = template[key];
+					if(key in templateOverrides) {
+						for(const property in templateOverrides[key]) {
+							entity.json[property] = templateOverrides[key][property];
 						}
+					}
+					EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json).then(entity => {
 						this.#entities.push(entity);
 					});
 				}

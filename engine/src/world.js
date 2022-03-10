@@ -1,10 +1,9 @@
 import { Level } from './level.js';
 import { Scene } from './render/scene.js';
 import { PhysicsWorld } from './physics/physicsWorld.js'
-import { Config } from './config.js';
-import { IS_BROWSER, IS_NODE } from './util/env.js'
-import { EntityFactory } from './factory/entityFactory.js';
-import { ModuleFactory } from './factory/moduleFactory.js';
+import { Host } from './networking/host.js';
+import { Channel } from './networking/channel.js';
+import { IS_BROWSER, IS_NODE } from './util/env.js';
 import { JSONFactory } from './factory/jsonFactory.js';
 import { Delegate } from './util/delegate.js';
 
@@ -12,8 +11,11 @@ class World {
     #engine = null;
     #scene = null;
     #physics = null;
+    #host = null;
+    #channel = null;
     #levels = new Map();
 
+    #onEntityAdded = new Delegate();
     #onEntityAddedMap = new Map();
     #entityMap = new Map();
     #ownershipMap = new Map();
@@ -25,72 +27,14 @@ class World {
         this.#physics = new PhysicsWorld();
 
         if(IS_NODE) {
-			const { http, geckos } = global.nodeimports;
-            const server = http.createServer()
-
-			const io = geckos({
-                cors: {
-                    allowAuthorization: true
-                }
-            });
-
-            io.addServer(server);
-            io.onConnection(channel => {
-                console.log('connection:', channel.id);
-
-                channel.emit('scene', JSON.stringify(this.#scene));
-
-                const init = {};
-                init.entities = [];
-                for(const [key, value] of this.#entityMap) {
-                    const entity = {};
-                    entity.meta = value.meta;
-                    entity.UUID = value.UUID;
-                    entity.json = value.toJSON();
-                    init.entities.push(entity);
-                }
-                channel.emit('init', init);
-            });
-
-            server.listen(8080, () => {
-                console.log('listening on *:8080');
-            });
+			this.#host = new Host(this);
 		}
 	}
 
     async load(worldURL) {
         // Test if url is an absolute path - if so, connect to the server for world.
         if(IS_BROWSER && /^(?:\/|[a-z]+:\/\/)/.test(worldURL)) {
-            ModuleFactory.get("Engine", "/3rdParty/geckos.io/geckos.io-client.2.1.8.min.js").then((module) => {
-                const geckos = module.geckos;
-                const split = worldURL.split(":");
-                const options = {};
-                options.url = split[0] + ':' + split[1];
-                if(split.length > 2) {
-                    options.port = parseInt(split[2]);
-                }
-                const channel = geckos(options);
-                channel.onConnect(error => {
-                    if (error) {
-                        console.error(error.message);
-                    }
-                  
-                    // listens for a disconnection
-                    channel.onDisconnect(() => {
-
-                    })
-
-                    channel.on('scene', json => {
-                        this.#scene.fromJSON(JSON.parse(json));
-                    });
-
-                    channel.on('init', json => {
-                        for(const entity of json.entities) {
-                            EntityFactory.make(this, entity.UUID, entity.meta, entity.json);
-                        }
-                    });
-                });
-            });
+            this.#channel = new Channel(this, worldURL);
         }
         else {
             JSONFactory.get(worldURL).then(json => {
@@ -113,10 +57,16 @@ class World {
     }
 	
 	tick(dt) {
+        if(this.#channel != null) {
+            this.#channel.tick(dt);
+        }
         if(this.#ownershipMap.has(null)) {
             for(const root of this.#ownershipMap.get(null)) {
                 this.#tickEntity(dt, root);
             }
+        }
+        if(this.#host != null) {
+            this.#host.tick(dt);
         }
 	}
 
@@ -141,8 +91,10 @@ class World {
         }
         this.#ownershipMap.get(entity.owner).push(entity.UUID);
 
+        this.#onEntityAdded.call(entity);
+
         if(this.#onEntityAddedMap.has(entity.UUID)) {
-            this.#onEntityAddedMap.get(entity.UUID).call(entity);
+            this.#onEntityAddedMap.get(entity.UUID).resolve(entity);
         }
     }
 
@@ -150,20 +102,29 @@ class World {
         return this.#entityMap.get(UUID);
     }
 
-    getEntityPromise(UUID) {
+    async getEntityPromise(UUID) {
         const entity = this.getEntity(UUID);
-        const entityPromise = new Promise(resolve => {
-            if(entity == null) {
-                if(!this.#onEntityAddedMap.has(UUID)) {
-                    this.#onEntityAddedMap.set(UUID, new Delegate());
-                }
-                this.#onEntityAddedMap.get(UUID).bind(resolve);
-            }
-            else {
-                resolve(entity);
-            }
+        if(entity != null) {
+            return entity;
+        }
+
+        if(this.#onEntityAddedMap.has(UUID)) {
+            return this.#onEntityAddedMap.get(UUID);
+        }
+
+        const promise = new Promise(entity => {
+            return entity;
         });
-        return entityPromise;
+
+        return promise;
+    }
+
+    get onEntityAdded() {
+        return this.#onEntityAdded;
+    }
+
+    get entities() {
+        return Array.from(this.#entityMap.values());
     }
 
 }

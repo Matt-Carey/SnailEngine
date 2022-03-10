@@ -21,7 +21,6 @@ class AnimationMixer extends Component {
                 this.#anims = anims;
 
                 this.world.getEntityPromise(this.owner).then(entity => {
-
                     const onModelLoaded = (model) => {
                         this.#animMixer = new ThreeAnimationMixer(model);
                         for (const anim of this.#anims) {

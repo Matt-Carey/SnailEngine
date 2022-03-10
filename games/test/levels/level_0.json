@@ -2,39 +2,33 @@
 	"templates": [
 	  {
 		"path": "/templates/robot.xml",
-		"overrides": [
-			{
-				"pos": {
-					"x": 0,
-					"y": -3,
-					"z": -15
-				}
+		"overrides": {
+			"Actor_0": {
+				"pos_x": 0,
+				"pos_y": -3,
+				"pos_z": -15
 			}
-		]
+		}
 	  },
 	  {
 		"path": "/templates/bee.xml",
-		"overrides": [
-			{
-				"pos": {
-					"x": 5,
-					"y": -3,
-					"z": -10
-				}
+		"overrides": {
+			"Actor_0": {
+				"pos_x": 2.5,
+				"pos_y": -3,
+				"pos_z": -10
 			}
-		]
+		}
 	  },
 	  {
 		"path": "/templates/troll.xml",
-		"overrides": [
-			{
-				"pos": {
-					"x": -5,
-					"y": -3,
-					"z": -10
-				}
+		"overrides": {
+			"Actor_0": {
+				"pos_x": -2.5,
+				"pos_y": -3,
+				"pos_z": -10
 			}
-		]
+		}
 	  }
 	],
 	"entities": [
@@ -50,11 +44,9 @@
 					"g": 0.5,
 					"b": 0.65
 				},
-				"rPos": {
-					"x": -5,
-					"y": 0,
-					"z": -10
-				}
+				"pos_x": -5,
+				"pos_y": 0,
+				"pos_z": -10
 			}
 		},
 		{
@@ -79,16 +71,12 @@
 			},
 			"json": {
 				"gltf": "/content/glb/block.glb",
-				"rPos": {
-					"x": 15,
-					"y": -5,
-					"z": -17.5
-				},
-				"rScale": {
-					"x": 15,
-					"y": 2,
-					"z": 10
-				}
+				"pos_x": 15,
+				"pos_y": -5,
+				"pos_z": -17.5,
+				"scale_x": 15,
+				"scale_y": 2,
+				"scale_z": 10
 			}
 		}
 	]

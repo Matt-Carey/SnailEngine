@@ -1,8 +1,15 @@
+import { Config } from './config.js';
 import { World } from './world.js';
 import { Renderer } from './render/renderer.js';
 import { IS_BROWSER, IS_NODE } from './util/env.js'
 
 class Engine {
+	static async init() {
+		return await Config.load().then(()=>{
+			return new Engine();
+		});
+	}
+
 	#time = 0;
 	#world = null;
 	#renderer = null;
@@ -12,7 +19,8 @@ class Engine {
 		this.#world = new World(this);
 		
 		if(IS_BROWSER) {
-			const snailCanvas = document.getElementById('snail-canvas');
+			const cfg = Config.get();
+			const snailCanvas = document.getElementById(cfg.canvas.domElementId);
 			this.#renderer = new Renderer(snailCanvas);
 		}
 
@@ -29,7 +37,9 @@ class Engine {
 			main(0);
 		}
 		else if(IS_NODE) {
-			const tickInterval = setInterval( function() { engine.tick(); }, 50);
+			const cfg = Config.get();
+			const fps = 1000 / cfg.server.fps;
+			const tickInterval = setInterval( function() { engine.tick(); }, fps);
 			engine.stop = function() {
 				clearInterval(tickInterval);
 			}
@@ -51,7 +61,7 @@ class Engine {
 	render() {
 		const renderer = this.#renderer;
 		const scene = this.#world.scene;
-		if(scene != null) {
+		if(renderer != null && scene != null) {
 			renderer.renderScene(scene);
 		}
 	}

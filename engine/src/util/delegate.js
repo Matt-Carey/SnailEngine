@@ -3,7 +3,9 @@ class Delegate {
     #callbacks = new Map();
 
     bind(f) {
-        this.#callbacks.set(this.#nextId++, f);
+        const id = this.#nextId++;
+        this.#callbacks.set(id, f);
+        return id;
     }
 
     unbind(handle) {
@@ -11,8 +13,8 @@ class Delegate {
     }
 
     call(...args) {
-        for(const callback of this.#callbacks) {
-            callback(args);
+        for(const [id, callback] of this.#callbacks) {
+            callback(...args);
         }
     }
 }

@@ -1,10 +1,10 @@
 import { World } from './../../3rdparty/omio.js/build/omio.module.js';
 
-class PhysicsWorld {
+class PhysicsWorld extends World {
     #world = null;
 
     constructor() {
-        this.#world = new World({ 
+        super({ 
             timestep: 1/60, 
             iterations: 8, 
             broadphase: 2, // 1 brute force, 2 sweep and prune, 3 volume tree

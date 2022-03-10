@@ -5,11 +5,9 @@
 	<entity cdn="Engine" type="Model" src="/src/component/3d/model/model.js">
 		<owner type="entity">0</owner>
 		<gltf>/content/glb/troll.glb</gltf>
-		<rScale>
-			<x>75</x>
-			<y>75</y>
-			<z>75</z>
-		</rScale>
+		<scale_x>75</scale_x>
+		<scale_y>75</scale_y>
+		<scale_z>75</scale_z>
 	</entity>
 	<entity cdn="Game" type="TrollAnimationMixer" src="/src/TrollAnimationMixer.js">
 		<owner type="entity">1</owner>

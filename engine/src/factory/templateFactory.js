@@ -1,5 +1,5 @@
 import { XMLFactory } from './xmlFactory.js';
-import { UUID } from '../../3rdparty/uuid/dist/uuidv4.js';
+import { UUID } from './../util/uuid.js';
 
 class Template {
     #templateEntities = [];
@@ -13,13 +13,19 @@ class Template {
     }
 
     toJSON() {
-        const json = {"entities": []};
+        const keyMap = new Map();
+        const json = {};
         for(const templateEntity of this.#templateEntities) {
-            json.entities.push({
+            const key = templateEntity.meta.type;
+            if(!keyMap.has(key)) {
+                keyMap.set(key, 0);
+            }
+            json[key + '_' + keyMap.get(key)] = {
                 "UUID": templateEntity.UUID,
                 "meta": templateEntity.meta,
                 "json": this.#process(templateEntity.json),
-            });
+            };
+            keyMap.set(key, keyMap.get(key) + 1);
         }
         return json;
     }

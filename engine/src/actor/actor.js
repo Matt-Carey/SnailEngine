@@ -1,41 +1,25 @@
-import { Entity } from './../entity.js';
+import { Component } from './../component/component.js';
 import { Vector } from './../math/vector.js';
+import { IS_NODE } from '../util/env.js';
 
-class Actor extends Entity {
-	#pos = new Vector(0, 0, 0);
-	#scale = new Vector(1, 1, 1);
+class Actor extends Component {
 
 	constructor(init) {
 		super(init);
 	}
 
-	fromJSON(json) {
-		super.fromJSON(json);
-		
-		if(json.pos != null) {
-			this.#pos.fromJSON(json.pos);
-		}
-
-		if(json.scale != null) {
-			this.#scale.fromJSON(json.scale);
-		}
+	get replicates() {
+		return true;
 	}
 
-	toJSON() {
-		const json = super.toJSON();
-
-		json.pos = this.#pos.toJSON();
-		json.scale = this.#scale.toJSON();
-
-		return json;
-	}
-
-	get position() {
-		return this.#pos;
-	}
-
-	get scale() {
-		return this.#scale;
+	tick(dt) {
+		super.tick(dt);
+		//if(IS_NODE) {
+			this.addOffset(new Vector(dt / 1000, 0, 0));
+			while(this.position.x > 5) {
+				this.addOffset(new Vector(-10, 0, 0));
+			}
+		//}
 	}
 }
 

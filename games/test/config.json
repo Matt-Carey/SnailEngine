@@ -6,5 +6,20 @@
     "world": {
         "startup": "http://localhost:8080",
         "_startup": "worlds/world.json"
+    },
+    "canvas": {
+        "domElementId": "snail-canvas"
+    },
+    "geckos": {
+        "cors": {
+            "allowAuthorization": true
+        }
+    },
+    "server": {
+        "port": 8080,
+        "fps": 20
+    },
+    "physics": {
+        "debug": true
     }
 }
