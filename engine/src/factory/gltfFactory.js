@@ -1,4 +1,4 @@
-import { IS_NODE } from '../util/env.js';
+import { IS_BROWSER, IS_NODE } from '../util/env.js';
 import { GLTFLoader } from './../../3rdparty/three.js/examples/jsm/loaders/GLTFLoader.js';
 import { SkeletonUtils } from './../../3rdparty/three.js/examples/jsm/utils/SkeletonUtils.js';
 
@@ -28,11 +28,21 @@ class GLTFFactory {
 		}
 
 		const pending = new Promise((resolve) => {
-			this.#loader.load(src, (result) => {
-				this.#pendingMap.delete(src);
-				this.#srcMap.set(src, result);
-				resolve(result);
-			});
+			if(IS_BROWSER) {
+				const fullPath = document.URL.substring(0, document.URL.lastIndexOf('/')) + src;
+				this.#loader.load(fullPath, (result) => {
+					this.#pendingMap.delete(src);
+					this.#srcMap.set(src, result);
+					resolve(result);
+				});
+			}
+			else {
+				this.#loader.load(src, (result) => {
+					this.#pendingMap.delete(src);
+					this.#srcMap.set(src, result);
+					resolve(result);
+				});
+			}
 		});
 
 		this.#pendingMap.set(src, pending);
