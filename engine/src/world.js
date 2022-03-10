@@ -3,6 +3,7 @@ import { Scene } from './render/scene.js';
 import { PhysicsWorld } from './physics/physicsWorld.js'
 import { Host } from './networking/host.js';
 import { Channel } from './networking/channel.js';
+import { DEDICATED_SERVER, CLIENT, STANDALONE, HAS_AUTHORITY } from './networking/role.js';
 import { IS_BROWSER, IS_NODE, WORKING_DIR } from './util/env.js';
 import { JSONFactory } from './factory/jsonFactory.js';
 import { Delegate } from './util/delegate.js';
@@ -11,6 +12,7 @@ class World {
     #engine = null;
     #scene = null;
     #physics = null;
+    #role = null;
     #host = null;
     #channel = null;
     #levels = new Map();
@@ -27,6 +29,7 @@ class World {
         this.#physics = new PhysicsWorld();
 
         if(IS_NODE) {
+            this.#role = DEDICATED_SERVER;
 			this.#host = new Host(this);
 		}
 	}
@@ -34,9 +37,11 @@ class World {
     async load(worldURL) {
         // Test if url is an absolute path - if so, connect to the server for world.
         if(IS_BROWSER && /^(?:\/|[a-z]+:\/\/)/.test(worldURL)) {
+            this.#role = CLIENT;
             this.#channel = new Channel(this, worldURL);
         }
         else {
+            this.#role = STANDALONE;
             JSONFactory.get(worldURL).then(json => {
                 this.#scene.fromJSON(json.scene);
                 for(const level of json.levels) {
@@ -55,6 +60,14 @@ class World {
 
     get physics() {
         return this.#physics;
+    }
+
+    get authority() {
+        return HAS_AUTHORITY(this.#role);
+    }
+
+    get role() {
+        return this.#role;
     }
 	
 	tick(dt) {

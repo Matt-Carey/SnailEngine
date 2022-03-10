@@ -94,6 +94,14 @@ class Entity {
         return this.#world;
     }
 
+    get authority() {
+        return this.world.authority;
+    }
+
+    get role() {
+        return this.world.role;
+    }
+
     get UUID() {
         return this.#UUID;
     }

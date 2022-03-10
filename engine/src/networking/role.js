@@ -1,0 +1,7 @@
+const DEDICATED_SERVER = 0;
+const CLIENT = 1;
+const STANDALONE = 2;
+
+function HAS_AUTHORITY(role) { return role == DEDICATED_SERVER || role == STANDALONE; }
+
+export { DEDICATED_SERVER, CLIENT, STANDALONE, HAS_AUTHORITY };
