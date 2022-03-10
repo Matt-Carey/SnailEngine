@@ -12,7 +12,7 @@ class Channel {
 
     constructor(world, worldURL) {
         this.#world = world;
-        ModuleFactory.get("Engine", "/3rdParty/geckos.io/geckos.io-client.2.1.8.min.js").then(module => {
+        ModuleFactory.get("Engine", "/3rdparty/geckos.io/geckos.io-client.2.1.8.min.js").then(module => {
             const split = worldURL.split(":");
             const options = {};
             options.url = split[0] + ':' + split[1];
