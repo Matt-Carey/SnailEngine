@@ -29,7 +29,7 @@ class GLTFFactory {
 
 		const pending = new Promise((resolve) => {
 			if(IS_BROWSER) {
-				const fullPath = document.URL.substring(0, document.URL.lastIndexOf('/')) + src;
+				const fullPath = src;
 				this.#loader.load(fullPath, (result) => {
 					this.#pendingMap.delete(src);
 					this.#srcMap.set(src, result);

@@ -1,11 +1,16 @@
-import { Config } from 'http://localhost:8000/src/config.js';
-import { Engine } from 'http://localhost:8000/src/engine.js';
+import { Engine } from 'http://127.0.0.1:8000/src/engine.js';
 
 global.nodeimports = await import('./modules.mjs');
 global.crypto = await import('crypto');
 
 ;(function() {
 	console.log('Command Line Args:', process.argv)
+
+	const protocolIndex = process.argv.indexOf('--protocol') + 1;
+	if(protocolIndex == 0) {
+		console.log("Missing protocol! Use --protocol followed by either http or https.");
+		return;
+	}
 
 	const gameIndex = process.argv.indexOf('--game') + 1;
 	if(gameIndex == 0) {
@@ -18,6 +23,8 @@ global.crypto = await import('crypto');
 		console.log("Missing world name! Use --world flag followed by name of world.");
 		return;
 	}
+
+	global.protocol = process.argv[protocolIndex];
 
 	const { fs } = global.nodeimports;
 

@@ -1,5 +1,6 @@
 import { EntityFactory } from './factory/entityFactory.js';
 import { TemplateFactory } from './factory/templateFactory.js';
+import { WORKING_DIR } from './util/env.js';
 import { UUID } from './util/uuid.js';
 
 class Level {
@@ -9,7 +10,7 @@ class Level {
 	constructor(world, json) {
 		this.#world = world;
 		for(const templateJson of json.templates) {
-			const templatePath = templateJson.path;
+			const templatePath = WORKING_DIR + templateJson.path;
 			const templateOverrides = templateJson.overrides;
 			TemplateFactory.get(templatePath).then(template => {
 				template = JSON.parse(JSON.stringify(template));

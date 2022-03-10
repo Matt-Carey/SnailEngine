@@ -12,4 +12,6 @@ const IS_JS_DOM = () => (typeof window !== 'undefined' && window.name === 'nodej
   || navigator.userAgent.includes('Node.js')
   || navigator.userAgent.includes('jsdom');
 
-export { IS_BROWSER, IS_WEB_WORKER, IS_NODE, IS_JS_DOM };
+const WORKING_DIR = IS_BROWSER ? document.URL.substring(0, document.URL.lastIndexOf('/')) : '';
+
+export { IS_BROWSER, IS_WEB_WORKER, IS_NODE, IS_JS_DOM, WORKING_DIR };

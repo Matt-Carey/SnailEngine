@@ -1,4 +1,4 @@
-import { AnimationMixer } from 'http://localhost:8000/src/component/3d/model/animationMixer.js';
+import { AnimationMixer } from 'http://127.0.0.1:8000/src/component/3d/model/animationMixer.js';
 
 class RobotAnimationMixer extends AnimationMixer {
     _onMixerReady() {

@@ -13,12 +13,16 @@ class Host {
     constructor(world) {
         this.#world = world;
 
-        const { http, geckos } = global.nodeimports;
-        this.#httpServer = http.createServer();
+        const { fs, http, https, geckos } = global.nodeimports;
 
         const cfg = Config.get();
+
 		this.#io = geckos(cfg.geckos);
 
+        const key = cfg.server.key;
+        const cert = cfg.server.cert;
+        const secure = (global.protocol === 'https' || global.protocol === 'https-dev') && key != null && cert != null;
+        this.#httpServer = secure ? https.createServer({ key: fs.readFileSync(key), cert: fs.readFileSync(cert) }) : http.createServer();
         this.#io.addServer(this.#httpServer);
 
         this.#io.onConnection(channel => {

@@ -1,5 +1,5 @@
 import { Component } from '../../component.js'
-import { IS_BROWSER } from '../../../util/env.js';
+import { IS_BROWSER, WORKING_DIR } from '../../../util/env.js';
 import { GLTFFactory } from '../../../factory/gltfFactory.js';
 import { Delegate } from '../../../util/delegate.js';
 
@@ -18,7 +18,7 @@ class Model extends Component {
         if(json.gltf != null && json.gltf != this.#gltf) {
             this.#gltf = json.gltf;
             if (IS_BROWSER) {
-                GLTFFactory.getModel(this.#gltf).then(model => {
+                GLTFFactory.getModel(WORKING_DIR + this.#gltf).then(model => {
                     this.world.scene.remove(this.#model);
                     this.#model = model;
                     this.onModelLoaded.call(this.#model);

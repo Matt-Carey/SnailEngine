@@ -1,5 +1,6 @@
 import { Component } from '../../component.js'
 import { GLTFFactory } from '../../../factory/gltfFactory.js';
+import { WORKING_DIR } from '../../../util/env.js';
 import { AnimationMixer as ThreeAnimationMixer } from '../../../../3rdparty/three.js/build/three.module.js';
 
 class AnimationMixer extends Component {
@@ -17,7 +18,7 @@ class AnimationMixer extends Component {
 
         if(json.gltf != null && json.gltf != this.#gltf) {
             this.#gltf = json.gltf;
-            GLTFFactory.getAnims(this.#gltf).then(anims => {
+            GLTFFactory.getAnims(WORKING_DIR + this.#gltf).then(anims => {
                 this.#anims = anims;
 
                 this.world.getEntityPromise(this.owner).then(entity => {

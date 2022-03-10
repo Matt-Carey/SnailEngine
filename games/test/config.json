@@ -1,10 +1,10 @@
 {
     "cdn": {
-        "Engine": "http://localhost:8000",
-        "Game": "http://localhost:80"
+        "Engine": "http://127.0.0.1:8000",
+        "Game": "http://127.0.0.1:80"
     },
     "world": {
-        "startup": "http://localhost:8080",
+        "startup": "http://127.0.0.1:8080",
         "_startup": "worlds/world.json"
     },
     "canvas": {
@@ -17,7 +17,9 @@
     },
     "server": {
         "port": 8080,
-        "fps": 20
+        "fps": 20,
+        "key": "key.pem",
+        "cert": "cert.pem"
     },
     "physics": {
         "debug": true

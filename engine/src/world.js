@@ -3,7 +3,7 @@ import { Scene } from './render/scene.js';
 import { PhysicsWorld } from './physics/physicsWorld.js'
 import { Host } from './networking/host.js';
 import { Channel } from './networking/channel.js';
-import { IS_BROWSER, IS_NODE } from './util/env.js';
+import { IS_BROWSER, IS_NODE, WORKING_DIR } from './util/env.js';
 import { JSONFactory } from './factory/jsonFactory.js';
 import { Delegate } from './util/delegate.js';
 
@@ -40,7 +40,8 @@ class World {
             JSONFactory.get(worldURL).then(json => {
                 this.#scene.fromJSON(json.scene);
                 for(const level of json.levels) {
-                    JSONFactory.get(level.path).then(json => {
+                    const levelpath = WORKING_DIR + level.path;
+                    JSONFactory.get(levelpath).then(json => {
                         this.#levels.set(level.name, new Level(this, json));
                     });
                 }

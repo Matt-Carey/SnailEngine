@@ -1,5 +1,5 @@
-import { AnimationMixer } from 'http://localhost:8000/src/component/3d/model/animationMixer.js';
-import { LoopOnce } from 'http://localhost:8000/3rdparty/three.js/build/three.module.js';
+import { AnimationMixer } from 'http://127.0.0.1:8000/src/component/3d/model/animationMixer.js';
+import { LoopOnce } from 'http://127.0.0.1:8000/3rdparty/three.js/build/three.module.js';
 
 class TrollAnimationMixer extends AnimationMixer {
 
