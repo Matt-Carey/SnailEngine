@@ -11,16 +11,6 @@ class UUID {
     static get() {
         return UUID.#generator();
     }
-
-    static #bufferSchema = null;
-    static get bufferSchema() {
-        if(UUID.#bufferSchema == null) {
-            UUID.#bufferSchema = Schema.BufferSchema.schema('uuid', {
-                UUID: { type: Schema.string8, length: 6 }
-            });
-        }
-        return UUID.#bufferSchema;
-    }
 }
 
 export { UUID };

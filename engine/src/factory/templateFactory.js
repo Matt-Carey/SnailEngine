@@ -5,6 +5,7 @@ class Template {
     #templateEntities = [];
 
     constructor(json) {
+        json.entity = Array.isArray(json.entity) ? json.entity : [json.entity];
         for(const key in json.entity) {
             const entityJson = json.entity[key];
             const templateEntity = new TemplateEntity(entityJson);
@@ -99,7 +100,7 @@ class TemplateFactory {
 
     static async get(url) {
         const json = await XMLFactory.get(url, TemplateFactory.#XMLoptions);
-        return new Template(json.template);
+        return JSON.parse(JSON.stringify(new Template(json.template)));
     }
 }
 

@@ -7,7 +7,6 @@ class ModuleFactory {
     static async get(cdn, src) {
         const cfg = Config.get();
 		src = cfg['cdn'][cdn] + src;
-
 		const module = this.#srcMap.get(src);
 		if(module != null) {
 			return module;

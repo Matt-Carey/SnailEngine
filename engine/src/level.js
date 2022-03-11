@@ -13,7 +13,6 @@ class Level {
 			const templatePath = WORKING_DIR + templateJson.path;
 			const templateOverrides = templateJson.overrides;
 			TemplateFactory.get(templatePath).then(template => {
-				template = JSON.parse(JSON.stringify(template));
 				for(const key in template) {
 					const entity = template[key];
 					if(key in templateOverrides) {

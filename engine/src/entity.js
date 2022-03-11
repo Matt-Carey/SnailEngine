@@ -22,6 +22,14 @@ class Entity {
         return this.#class;
     }
 
+    get superclass() {
+        return Object.getPrototypeOf(this.class);
+    }
+
+    static get superclass() {
+        return Object.getPrototypeOf(this);
+    }
+
     fromJSON(json) {
         if(json.owner != null) {
             this.#owner = json.owner;
@@ -39,26 +47,12 @@ class Entity {
         return false;
     }
 
-    static get bufferSchemaName() {
-        return this.bufferSchema.name;
-    }
-
-    static #bufferSchema = null;
-	static get bufferSchema() {
-		if(Entity.#bufferSchema == null) {
-			Entity.#bufferSchema = Schema.BufferSchema.schema('entity', {
-                id: { type: Schema.string8, length: 6 }
-            });
-		}	
-		return Entity.#bufferSchema;
+	static get bufferSchemaStruct() {
+		return { id: { type: Schema.string8, length: 6 } };
 	}
 
-    static #interpolationValues = null;
     static get interpolationValues() {
-        if(Entity.#interpolationValues == null) {
-            Entity.#interpolationValues = '';
-        }
-        return Entity.#interpolationValues;
+        return '';
     }
 
     static get schemaModelName() {
@@ -74,20 +68,22 @@ class Entity {
     }
 
     static get schemaModel() {
-        const rawBufferSchema = this.bufferSchema;
-        const name = rawBufferSchema.name + '_ss';
-        if(!Entity.#schemaModelMap.has(name)) {
-            const snapshotBufferSchema = Schema.BufferSchema.schema(name, {
+        let c = this;
+        while(!c.hasOwnProperty("bufferSchemaStruct")) {
+            c = c.superclass;
+        }
+        const key = c.name;
+        if(!Entity.#schemaModelMap.has(key)) {
+            Entity.#schemaModelMap.set(key, new Schema.Model(Schema.BufferSchema.schema(key, {
                 id: { type: Schema.string8, length: 6 },
                 time: Schema.uint64,
-                state: { entities: [rawBufferSchema] }
-            });
-            Entity.#schemaModelMap.set(name, new Schema.Model(snapshotBufferSchema));
+                state: { entities: [Schema.BufferSchema.schema(key + '_raw', c.bufferSchemaStruct)] }
+            })));
         }
-        if(!Entity.#interpolationValuesMap.has(name)) {
-            Entity.#interpolationValuesMap.set(name, this.interpolationValues);
+        if(!Entity.#interpolationValuesMap.has(key)) {
+            Entity.#interpolationValuesMap.set(key, c.interpolationValues);
         }
-        return Entity.#schemaModelMap.get(name);
+        return Entity.#schemaModelMap.get(key);
     }
 
     get world() {

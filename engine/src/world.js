@@ -1,3 +1,4 @@
+import { Game } from './game/game.js';
 import { Level } from './level.js';
 import { Scene } from './render/scene.js';
 import { PhysicsWorld } from './physics/physicsWorld.js'
@@ -7,9 +8,11 @@ import { DEDICATED_SERVER, CLIENT, STANDALONE, HAS_AUTHORITY } from './networkin
 import { IS_BROWSER, IS_NODE, WORKING_DIR } from './util/env.js';
 import { JSONFactory } from './factory/jsonFactory.js';
 import { Delegate } from './util/delegate.js';
+import { ModuleFactory } from './factory/moduleFactory.js';
 
 class World {
     #engine = null;
+    #game = null;
     #scene = null;
     #physics = null;
     #role = null;
@@ -27,23 +30,34 @@ class World {
 
         this.#scene = new Scene();
         this.#physics = new PhysicsWorld();
-
-        if(IS_NODE) {
-            this.#role = DEDICATED_SERVER;
-			this.#host = new Host(this);
-		}
 	}
 
     async load(worldURL) {
         // Test if url is an absolute path - if so, connect to the server for world.
-        if(IS_BROWSER && /^(?:\/|[a-z]+:\/\/)/.test(worldURL)) {
-            this.#role = CLIENT;
-            this.#channel = new Channel(this, worldURL);
+        if(IS_NODE) {
+            this.#role = DEDICATED_SERVER;
+            if(this.#host == null) {
+                this.#host = new Host(this);
+            }
         }
-        else {
-            this.#role = STANDALONE;
+        else if(IS_BROWSER) {
+            this.#role = /^(?:\/|[a-z]+:\/\/)/.test(worldURL) ? CLIENT : STANDALONE;
+        }
+
+        if(this.authority) {
+            // TODO Handle leaving old game
+            if(this.#game != null) {
+                //this.#game.stop();
+            }
             JSONFactory.get(worldURL).then(json => {
                 this.#scene.fromJSON(json.scene);
+                const gameJson = json.game;
+                ModuleFactory.get(gameJson.meta.cdn, gameJson.meta.src).then(result => {
+                    const gameClass = result[gameJson.meta.type];
+                    if(gameClass != null) {
+                        this.#game = new gameClass(this, gameJson.json);
+                    }
+                });
                 for(const level of json.levels) {
                     const levelpath = WORKING_DIR + level.path;
                     JSONFactory.get(levelpath).then(json => {
@@ -51,6 +65,13 @@ class World {
                     });
                 }
             });
+        }
+        else {
+            // TODO Handle leaving channel
+            if(this.#channel != null) {
+                //this.#channel.disconnect();
+            }
+            this.#channel = new Channel(this, worldURL);
         }
     }
 
@@ -60,6 +81,10 @@ class World {
 
     get physics() {
         return this.#physics;
+    }
+
+    get game() {
+        return this.#game;
     }
 
     get authority() {

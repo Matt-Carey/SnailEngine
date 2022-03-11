@@ -36,30 +36,22 @@ class Component extends Entity {
 		return false;
 	}
 
-	static #bufferSchema = null;
-	static get bufferSchema() {
-		if(Component.#bufferSchema == null) {
-			const schemaStruct = Entity.bufferSchema.struct;
+	static get bufferSchemaStruct() {
+		const schemaStruct = Entity.bufferSchemaStruct;
 
-			schemaStruct.pos_x = { type: Schema.int16, digits: 2 };
-			schemaStruct.pos_y = { type: Schema.int16, digits: 2 };
-			schemaStruct.pos_z = { type: Schema.int16, digits: 2 };
+		schemaStruct.pos_x = { type: Schema.int16, digits: 2 };
+		schemaStruct.pos_y = { type: Schema.int16, digits: 2 };
+		schemaStruct.pos_z = { type: Schema.int16, digits: 2 };
 
-			schemaStruct.scale_x = { type: Schema.int16, digits: 2 };
-			schemaStruct.scale_y = { type: Schema.int16, digits: 2 };
-			schemaStruct.scale_z = { type: Schema.int16, digits: 2 };
+		schemaStruct.scale_x = { type: Schema.int16, digits: 2 };
+		schemaStruct.scale_y = { type: Schema.int16, digits: 2 };
+		schemaStruct.scale_z = { type: Schema.int16, digits: 2 };
 
-			Component.#bufferSchema = Schema.BufferSchema.schema('component', schemaStruct);
-		}	
-		return Component.#bufferSchema;
+		return schemaStruct;
 	}
 
-	static #interpolationValues = null;
     static get interpolationValues() {
-        if(Component.#interpolationValues == null) {
-            Component.#interpolationValues = 'pos_x pos_y pos_z';
-        }
-        return Component.#interpolationValues;
+		return Entity.interpolationValues + 'pos_x pos_y pos_z';
     }
 
 	addOffset(vector) {

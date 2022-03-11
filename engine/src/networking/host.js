@@ -67,7 +67,7 @@ class Host {
                     snapshotEntityMap.set(modelName, []);
                 }
 
-                const schemaStruct = entity.class.bufferSchema.struct;
+                const schemaStruct = entity.class.bufferSchemaStruct;
                 const json = entity.toJSON();
                 for(const key in json) {
                     if(!(key in schemaStruct)) {

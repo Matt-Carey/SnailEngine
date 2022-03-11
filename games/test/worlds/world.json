@@ -18,6 +18,17 @@
       "far": 1000
     }
   },
+  "game": {
+    "meta": {
+      "cdn": "Game",
+      "type": "TestGame",
+      "src": "/src/testGame.js"
+    },
+    "json": {
+      "state": "/templates/testState.xml",
+      "controller": "/templates/testController.xml"
+    }
+  },
   "levels": [
     {
 	  "name": "level_0",
