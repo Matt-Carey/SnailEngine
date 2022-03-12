@@ -30,6 +30,7 @@ class Channel {
 
             const geckos = module.geckos;
             this.#channel = geckos(options);
+            console.log(this.#channel);
             this.#channel.onConnect(error => {
                 if (error) {
                     console.error(error.message);
@@ -49,6 +50,10 @@ class Channel {
                         EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json);
                     }
                 });
+
+                this.#channel.on('entity_added', entity => {
+                    EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json);
+                })
 
                 this.#channel.on('state', state => {
                     for(const modelName in state) {

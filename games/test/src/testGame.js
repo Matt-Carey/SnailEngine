@@ -6,15 +6,15 @@ class TestGame extends Game {
     }
 
     _onStateReady() {
-        
+        super._onStateReady();
     }
 
     onLogin(channel) {
-
+        super.onLogin(channel);
     }
 
     onLogout(channel) {
-
+        super.onLogin(channel);
     }
 }
 

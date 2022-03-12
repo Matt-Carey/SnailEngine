@@ -29,6 +29,8 @@ class Host {
             console.log('connection:', channel.id);
             this.#channels.set(channel.id, channel);
 
+            this.#world.game.onLogin(channel);
+
             channel.emit('scene', JSON.stringify(this.#world.scene));
 
             const init = {};

@@ -6,6 +6,7 @@ class Entity {
     #UUID = null;
     #meta = null;
 	#owner = null;
+    #netId = null;
     #default = null;
     
     static #schemaModelMap = new Map();
