@@ -1,4 +1,5 @@
 import { Schema } from './../3rdparty/geckos.io/typed-array-buffer-schema.js';
+import { cloneJSON } from './util/diff.js';
 
 class Entity {
     #class = null;
@@ -8,15 +9,22 @@ class Entity {
 	#owner = null;
     #netId = null;
     #default = null;
+    #serializeMap = new Map();
     
+    static #replicatedPropertiesMap = new Map();
+
     static #schemaModelMap = new Map();
-    static #interpolationValuesMap = new Map();
+    static #interpolationMethodMap = new Map();
 
     constructor(init) {
         this.#class = init.class
         this.#world = init.world;
         this.#UUID = init.UUID;
         this.#meta = init.meta;
+    }
+
+    static {
+        Entity.#interpolationMethodMap.set(Entity.name, '');
     }
 
     get class() {
@@ -48,43 +56,160 @@ class Entity {
         return false;
     }
 
-	static get bufferSchemaStruct() {
-		return { id: { type: Schema.string8, length: 6 } };
-	}
-
-    static get interpolationValues() {
-        return '';
+    static get replicatedProperties() {
+        return {
+            id: { schema: { type: Schema.string8, length: 6 } }
+        };
     }
 
-    static get schemaModelName() {
-        return this.schemaModel.schema.name;
+    static get hasReplicatedProperties() {
+        for(let _ in this.aggrigateReplicatedProperties) return true;
+        return false;
+    }
+
+    static get aggrigateReplicatedProperties() {
+        if(Entity.#replicatedPropertiesMap.has(this.name)) {
+            return Entity.#replicatedPropertiesMap.get(this.name);
+        }
+        if(!this.hasOwnProperty("replicatedProperties")) {
+            return this.superclass.aggrigateReplicatedProperties;
+        }
+        const replicatedProperties = this.replicatedProperties;
+        const superReplicatedProperties = (this == Entity) ? {} : this.superclass.aggrigateReplicatedProperties;
+        const aggrigateProperties = cloneJSON(superReplicatedProperties);
+        for(const key in replicatedProperties) {
+            aggrigateProperties[key] = replicatedProperties[key];
+        }
+        Entity.#replicatedPropertiesMap.set(this.name, aggrigateProperties);
+        return aggrigateProperties;
+    }
+
+    get replicatedState() {
+        const replicatedProperties = this.class.aggrigateReplicatedProperties;
+        const state = this.toJSON();
+        for(const key in state) {
+            if(!(key in replicatedProperties)) {
+                delete state[key];
+            }
+        }
+        return state;
+    }
+
+    static get replicatedSchemaModel() {
+        let c = this;
+        if(Entity.#schemaModelMap.has(c.name)) {
+            return Entity.#schemaModelMap.get(c.name);
+        }
+        
+        while(!c.hasOwnProperty("replicatedProperties") || !((replicatedProperties) => {
+            for(const key in replicatedProperties) {
+                if(replicatedProperties[key].hasOwnProperty("schema")) {
+                    return true;
+                }
+            }
+            return false;
+        })(c.replicatedProperties)) {
+            c = c.superclass;
+            if(Entity.#schemaModelMap.has(c.name)) {
+                const schemaModel = Entity.#schemaModelMap.get(c.name);
+                let c2 = this;
+                while(c2 != c) {
+                    Entity.#schemaModelMap.set(c2.name, schemaModel);
+                    c2 = c2.superclass;
+                }
+                return Entity.#schemaModelMap.get(this.name);
+            }
+        }
+
+        const rawSchema = {};
+        const aggrigateProperties = c.aggrigateReplicatedProperties;
+        for(const key in aggrigateProperties) {
+            if(aggrigateProperties[key].hasOwnProperty("schema")) {
+                rawSchema[key] = aggrigateProperties[key].schema;
+            }
+        }
+
+        const schemaModel = new Schema.Model(Schema.BufferSchema.schema(c.name, {
+            id: { type: Schema.string8, length: 6 },
+            time: Schema.uint64,
+            state: { raw: [Schema.BufferSchema.schema(c.name + '_raw', rawSchema)] }
+        }));
+
+        let c2 = this;
+        while(c2 != c) {
+            Entity.#schemaModelMap.set(c2.name, schemaModel);
+            c2 = c2.superclass;
+        }
+        Entity.#schemaModelMap.set(c.name, schemaModel);
+
+        return Entity.#schemaModelMap.get(this.name);
+    }
+
+    static get interpolationMethod() {
+        let c = this;
+        if(Entity.#interpolationMethodMap.has(c.name)) {
+            return Entity.#interpolationMethodMap.get(c.name);
+        }
+        
+        while(!c.hasOwnProperty("replicatedProperties") || !((replicatedProperties) => {
+            for(const key in replicatedProperties) {
+                if(replicatedProperties[key].hasOwnProperty("interp")) {
+                    return true;
+                }
+            }
+            return false;
+        })(c.replicatedProperties)) {
+            c = c.superclass;
+            if(Entity.#interpolationMethodMap.has(c.name)) {
+                const interpolationMethod = Entity.#interpolationMethodMap.get(c.name);
+                let c2 = this;
+                while(c2 != c) {
+                    Entity.#interpolationMethodMap.set(c2.name, interpolationMethod);
+                    c2 = c2.superclass;
+                }
+                return Entity.#interpolationMethodMap.get(this.name);
+            }
+        }
+
+        const interpMethods = [];
+        const aggrigateProperties = c.aggrigateReplicatedProperties;
+        for(const key in aggrigateProperties) {
+            if(aggrigateProperties[key].hasOwnProperty("interp")) {
+                switch(aggrigateProperties[key].interp) {
+                    case 'linear':
+                        interpMethods.push(key);
+                    break;
+                    case 'rad':
+                        interpMethods.push(key+'(rad)');
+                    break;
+                    case 'deg':
+                        interpMethods.push(key+'(deg)');
+                    break;
+                    case 'quat':
+                        interpMethods.push(key+'(quat)');
+                    break;
+                }
+            }
+        }
+
+        const interpMethod = interpMethods.join(' ');
+
+        let c2 = this;
+        while(c2 != c) {
+            Entity.#interpolationMethodMap.set(c2.name, interpMethod);
+            c2 = c2.superclass;
+        }
+        Entity.#interpolationMethodMap.set(c.name, interpMethod);
+
+        return Entity.#interpolationMethodMap.set(this.name);
     }
 
     static get schemaModelMap() {
         return Entity.#schemaModelMap;
     }
 
-    static get interpolationValuesMap() {
-        return Entity.#interpolationValuesMap;
-    }
-
-    static get schemaModel() {
-        let c = this;
-        while(!c.hasOwnProperty("bufferSchemaStruct")) {
-            c = c.superclass;
-        }
-        const key = c.name;
-        if(!Entity.#schemaModelMap.has(key)) {
-            Entity.#schemaModelMap.set(key, new Schema.Model(Schema.BufferSchema.schema(key, {
-                id: { type: Schema.string8, length: 6 },
-                time: Schema.uint64,
-                state: { entities: [Schema.BufferSchema.schema(key + '_raw', c.bufferSchemaStruct)] }
-            })));
-        }
-        if(!Entity.#interpolationValuesMap.has(key)) {
-            Entity.#interpolationValuesMap.set(key, c.interpolationValues);
-        }
-        return Entity.#schemaModelMap.get(key);
+    static get interpolationMethodMap() {
+        return Entity.#interpolationMethodMap;
     }
 
     get world() {
@@ -126,7 +251,7 @@ class Entity {
     }
 
     tick(dt) {
-
+        
     }
 
 }

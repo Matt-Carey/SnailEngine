@@ -4,6 +4,13 @@ class TestController extends Controller {
     constructor(init) {
         super(init);
     }
+
+    static get replicatedProperties() {
+        return {
+            f2: '',
+            f8: ''
+        }
+    }
 }
 
 export { TestController };

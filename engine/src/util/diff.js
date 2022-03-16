@@ -15,4 +15,53 @@ function diff(obj1, obj2) {
     return result;
 }
 
-export { diff };
+// https://stackoverflow.com/questions/25456013/javascript-deepequal-comparison
+function deepEqual(obj1, obj2) {
+
+    if(obj1 === obj2) // it's just the same object. No need to compare.
+        return true;
+
+    if(isPrimitive(obj1) && isPrimitive(obj2)) // compare primitives
+        return obj1 === obj2;
+
+    if(Object.keys(obj1).length !== Object.keys(obj2).length)
+        return false;
+
+    // compare objects with same number of keys
+    for(let key in obj1)
+    {
+        if(!(key in obj2)) return false; //other object doesn't have this prop
+        if(!deepEqual(obj1[key], obj2[key])) return false;
+    }
+
+    return true;
+}
+
+//check if value is primitive
+function isPrimitive(obj)
+{
+    return (obj !== Object(obj));
+}
+
+function cloneJSON(obj) {
+    // basic type deep copy
+    if (obj === null || obj === undefined || typeof obj !== 'object')  {
+        return obj;
+    }
+    // array deep copy
+    if (obj instanceof Array) {
+        var cloneA = [];
+        for (var i = 0; i < obj.length; ++i) {
+            cloneA[i] = cloneJSON(obj[i]);
+        }              
+        return cloneA;
+    }                  
+    // object deep copy
+    var cloneO = {};   
+    for (var i in obj) {
+        cloneO[i] = cloneJSON(obj[i]);
+    }                  
+    return cloneO;
+}
+
+export { diff, deepEqual, cloneJSON };

@@ -9,6 +9,7 @@ class Channel {
     #world = null;
     #channel = null;
     #snapMap = new Map();
+    #ghostFrame = -1;
 
     constructor(world, worldURL) {
         this.#world = world;
@@ -21,7 +22,8 @@ class Channel {
             }
 
             this.#world.onEntityAdded.bind((entity) => {
-                const name = entity.class.schemaModelName;
+                const interpolationMethod = entity.class.interpolationMethod;
+                const name = entity.class.replicatedSchemaModel.schema.name;
                 if(!this.#snapMap.has(name)) {
                     const cfg = Config.get();
                     this.#snapMap.set(name, new Snap.SnapshotInterpolation(cfg.server.fps ?? 20));
@@ -55,24 +57,34 @@ class Channel {
                     EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json);
                 })
 
-                this.#channel.on('state', state => {
-                    for(const modelName in state) {
+                this.#channel.on('snapshot', snapshotJson => {
+                    for(const modelName in snapshotJson) {
                         if(Entity.schemaModelMap.has(modelName)) {
-                            const snapshot = Entity.schemaModelMap.get(modelName).fromBuffer(str2ab(state[modelName]));
+                            const snapshotString = snapshotJson[modelName];
+                            const snapshotArraybuffer = str2ab(snapshotString);
+                            const snapshot = Entity.schemaModelMap.get(modelName).fromBuffer(snapshotArraybuffer);
                             if(this.#snapMap.has(modelName)) {
                                 this.#snapMap.get(modelName).snapshot.add(snapshot);
                             }
                         }
                     }
                 });
+
+                this.#channel.on('dirty_ghost', ghost => {
+                    if(ghost.frame <= this.#ghostFrame) return;
+                    this.#ghostFrame = ghost.frame;
+                    if(Math.random() > 0.8)
+                    this.#channel.emit('ack_dirty_ghost', ghost.frame);
+                })
+
             });
         });
     }
 
     tick(dt) {
         for(const [key, value] of this.#snapMap) {
-            const interpolationValues = Entity.interpolationValuesMap.get(key);
-            const snapshot = value.calcInterpolation(interpolationValues ?? '', 'entities');
+            const interpolationMethod = Entity.interpolationMethodMap.get(key);
+            const snapshot = value.calcInterpolation(interpolationMethod ?? '', 'raw');
             if(snapshot != undefined) {
                 for(const state of snapshot.state) {
                     const entity = this.#world.getEntity(state.id);

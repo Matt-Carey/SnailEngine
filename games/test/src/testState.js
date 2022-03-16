@@ -6,6 +6,7 @@ class TestState extends State {
     }
 
     tick(dt) {
+        super.tick(dt);
     }
 }
 

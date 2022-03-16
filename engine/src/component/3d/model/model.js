@@ -1,7 +1,8 @@
 import { Component } from '../../component.js'
-import { IS_BROWSER, WORKING_DIR } from '../../../util/env.js';
+import { IS_BROWSER, IS_NODE, WORKING_DIR } from '../../../util/env.js';
 import { GLTFFactory } from '../../../factory/gltfFactory.js';
 import { Delegate } from '../../../util/delegate.js';
+import { Vector } from '../../../math/vector.js';
 
 class Model extends Component {
     #gltf = null;
@@ -38,6 +39,7 @@ class Model extends Component {
 
     tick(dt) {
         super.tick(dt);
+        if(IS_NODE) this.addOffset(new Vector(0.1,0.1,0.1));
         if(this.#model != null) {
             const position = this.position;
             this.#model.position.set(position.x, position.y, position.z);

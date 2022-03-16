@@ -33,25 +33,28 @@ class Component extends Entity {
 	}
 
 	get replicates() {
-		return false;
+		return true;
 	}
 
-	static get bufferSchemaStruct() {
-		const schemaStruct = Entity.bufferSchemaStruct;
-
-		schemaStruct.pos_x = { type: Schema.int16, digits: 2 };
-		schemaStruct.pos_y = { type: Schema.int16, digits: 2 };
-		schemaStruct.pos_z = { type: Schema.int16, digits: 2 };
-
-		schemaStruct.scale_x = { type: Schema.int16, digits: 2 };
-		schemaStruct.scale_y = { type: Schema.int16, digits: 2 };
-		schemaStruct.scale_z = { type: Schema.int16, digits: 2 };
-
-		return schemaStruct;
-	}
-
-    static get interpolationValues() {
-		return Entity.interpolationValues + 'pos_x pos_y pos_z';
+	static get replicatedProperties() {
+        return {
+            pos_x : { 
+				schema: { type: Schema.int16, digits: 2 },
+				interp: 'linear'
+			},
+            pos_y : { 
+				schema: { type: Schema.int16, digits: 2 },
+				interp: 'linear'
+			},
+            pos_z : { 
+				schema: { type: Schema.int16, digits: 2 },
+				interp: 'linear'
+			},
+			
+            scale_x : { schema: { type: Schema.int16, digits: 2 } },
+            scale_y : { schema: { type: Schema.int16, digits: 2 } },
+            scale_z : { schema: { type: Schema.int16, digits: 2 } }
+        }
     }
 
 	addOffset(vector) {
