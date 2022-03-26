@@ -3,7 +3,7 @@
 	  {
 		"path": "/templates/robot.xml",
 		"overrides": {
-			"Model_0": {
+			"TestModel_0": {
 				"pos_x": 0,
 				"pos_y": -3,
 				"pos_z": -15
@@ -13,7 +13,7 @@
 	  {
 		"path": "/templates/bee.xml",
 		"overrides": {
-			"Model_0": {
+			"TestModel_0": {
 				"pos_x": 2.5,
 				"pos_y": -3,
 				"pos_z": -10
@@ -23,7 +23,7 @@
 	  {
 		"path": "/templates/troll.xml",
 		"overrides": {
-			"Model_0": {
+			"TestModel_0": {
 				"pos_x": -2.5,
 				"pos_y": -3,
 				"pos_z": -10

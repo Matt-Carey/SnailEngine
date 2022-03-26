@@ -8,9 +8,10 @@ class Host {
     #world = null;
     #io = null;
     #httpServer = null;
-    #snapMap = new Map();
     #channels = new Map();
+    #snap = null;
     #ghosts = new Map();
+
 
     constructor(world) {
         this.#world = world;
@@ -27,10 +28,12 @@ class Host {
         this.#httpServer = secure ? https.createServer({ key: fs.readFileSync(key), cert: fs.readFileSync(cert) }) : http.createServer();
         this.#io.addServer(this.#httpServer);
 
+        this.#snap = new Snap.SnapshotInterpolation();
+
         this.#io.onConnection(channel => {
             console.log('connection:', channel.id);
             this.#channels.set(channel.id, channel);
-            this.#ghosts.set(channel.id, new GhostManager(this.#world));
+            this.#ghosts.set(channel.id, new GhostManager(this.#world, channel.id));
 
             this.#world.game.onLogin(channel);
 
@@ -47,7 +50,7 @@ class Host {
             }
             channel.emit('init', init, { reliable: true });
 
-            channel.on('ack_dirty_ghost', frame => {
+            channel.on('ack', frame => {
                 this.#ghosts.get(channel.id).ack(frame);
             });
         });
@@ -67,54 +70,78 @@ class Host {
     }
 
     tick(dt) {
-        for(const [channelId, ghost] of this.#ghosts) {
-            const ghostFrame = ghost.frame;
-            if(ghostFrame != null) {
-                this.#channels.get(channelId).emit('dirty_ghost', ghostFrame);
-            }
-        }
-
-        this.#io.emit('snapshot', this.#snapshot);
-    }
-
-    get #snapshot() {
-        const snapshotEntityMap = new Map();
+        const replicationTypeMap = new Map();
+        const schemaStateMap = new Map();
+        const ghostStateMap = new Map();
         for(const entity of this.#world.entities) {
-            if(entity.replicates) {
-                const replicatedSchema = entity.class.replicatedSchemaModel.schema;
-                const schemaName = replicatedSchema.name;
+            if(entity.replicates && entity.class.hasReplicatedProperties) {
+                const schemaState = {};
+                const ghostState = {};
 
-                if(!snapshotEntityMap.has(schemaName)) {
-                    snapshotEntityMap.set(schemaName, []);
-                }
-
-                const json = entity.toJSON();
-                for(const key in json) {
-                    if(!(key in replicatedSchema.struct.state.raw[0].struct)) {
-                        delete json[key];
+                const aggrigateReplicatedProperties = entity.class.aggrigateReplicatedProperties;
+                const entityState = entity.toJSON();
+                for(const key in entityState) {
+                    if(!(key in aggrigateReplicatedProperties)) {
+                        delete entityState[key];
+                    }
+                    else if(aggrigateReplicatedProperties[key].hasOwnProperty('schema')) {
+                        schemaState[key] = entityState[key];
+                    }
+                    else {
+                        ghostState[key] = entityState[key];
                     }
                 }
 
-                snapshotEntityMap.get(schemaName).push(json);
-            }
-        }
-
-        const snapshotJson = {};
-        for(const [key, value] of snapshotEntityMap) {
-            if(Entity.schemaModelMap.has(key)) {
-                if(!this.#snapMap.has(key)) {
-                    this.#snapMap.set(key, new Snap.SnapshotInterpolation());
+                const replicationType = entity.class.replicationType;
+                if(!replicationTypeMap.has(replicationType)) {
+                    replicationTypeMap.set(replicationType, []);
                 }
-                const snap = this.#snapMap.get(key);
-                const snapshot = snap.snapshot.create({raw: value});
-                snap.vault.add(snapshot);
-                const snapshotArraybuffer = Entity.schemaModelMap.get(key).toBuffer(snapshot);
-                const snapshotString = ab2str(snapshotArraybuffer);
-                snapshotJson[key] = snapshotString;
+                replicationTypeMap.get(replicationType).push(entityState);
+
+                const replicatedSchemaModel = entity.class.replicatedSchemaModel;
+                if(replicatedSchemaModel != null) {
+                    const schemaName = replicatedSchemaModel.schema.name;
+                    if(!schemaStateMap.has(schemaName)) {
+                        schemaStateMap.set(schemaName, []);
+                    }
+                    schemaStateMap.get(schemaName).push(schemaState);
+                }
+
+                if((() => {
+                    for(const _ in ghostState) return true;
+                    return false;
+                })()) {
+                    const UUID = entity.UUID;
+                    ghostStateMap.set(UUID, ghostState);
+                }
             }
         }
 
-        return snapshotJson;
+        const state = {};
+        for(const [key, value] of replicationTypeMap) {
+            state[key] = value;
+        }
+
+        const snapshot = this.#snap.snapshot.create(state);
+        this.#snap.vault.add(snapshot);
+
+        for(const [channelId, channel] of this.#channels) {
+            const ghost = this.#ghosts.get(channelId).update(ghostStateMap);
+            
+            const schema = {};
+            for(const [key, value] of schemaStateMap) {
+                const buffer = Entity.schemaModelMap.get(key).toBuffer(value);
+                const string = ab2str(buffer);
+                schema[key] = string;
+            }
+            
+            channel.emit('state', {
+                id: snapshot.id,
+                time: snapshot.time,
+                schema: schema,
+                ghost: ghost
+            });
+        }
     }
 }
 

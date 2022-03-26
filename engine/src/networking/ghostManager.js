@@ -1,20 +1,22 @@
-import { deepEqual } from "../util/diff.js";
+import { deepEqual, deepCopy } from "../util/diff.js";
 
 class Ghost {
-    #entity = null;
+    #pendingFrame = null;
     #frames = new Map();
     #acked = null;
     #current = null;
 
-    constructor(entity, acked, current) {
-        this.#entity = entity;
+    constructor(state, acked, current) {
         this.#acked = acked;
         this.#current = current;
         
-        const state = entity.replicatedState;
         for(let i = this.#acked; i <= this.#current; i++) {
             this.#frames.set(i, state);
         }
+    }
+
+    set pendingFrame(frame) {
+        this.#pendingFrame = frame;
     }
 
     ack(frame) {
@@ -24,18 +26,13 @@ class Ghost {
         this.#acked = frame;
     }
 
-    get pendingFrame() {
-        return this.#entity.replicatedState;
-    }
-
     writeNextFrame() {
         this.#current++;
-        const state = this.pendingFrame;
-        this.#frames.set(this.#current, state);
+        this.#frames.set(this.#current, this.#pendingFrame);
     }
 
     get dirtyState() {
-        const pending = this.pendingFrame;
+        const pending = deepCopy(this.#pendingFrame);
         const cleanKeys = Object.keys(pending);
         for (const frame of this.#frames.values()) {
             const dirtyKeys = [];
@@ -63,19 +60,15 @@ class Ghost {
 
 class GhostManager {
     #world = null;
+    #channelId = null;
     #ghosts = new Map();
     #frame = null;
     #acked = 0;
     #current = 0;
 
-    constructor(world) {
+    constructor(world, channelId) {
         this.#world = world;
-        for(const entity of this.#world.entities) {
-            this.#onEntityAdded(entity);
-        }
-        this.#world.onEntityAdded.bind((entity)=> {
-            this.#onEntityAdded(entity);
-        });
+        this.#channelId = channelId;
     }
 
     ack(frame) {
@@ -85,17 +78,14 @@ class GhostManager {
         this.#acked = frame;
     }
 
-    #onEntityAdded(entity) {
-        if(Object.keys(entity.class.replicatedProperties).length === 0) {
-            return;
+    update(ghostStateMap) {
+        for(const [key, value] of ghostStateMap) {
+            if(!this.#ghosts.has(key)) {
+                this.#ghosts.set(key, new Ghost(value, this.#acked, this.#current));
+            }
+            this.#ghosts.get(key).pendingFrame = value;
         }
 
-        if(entity.replicates) {
-            this.#ghosts.set(entity.UUID, new Ghost(entity, this.#acked, this.#current));
-        }
-    }
-
-    get frame() {
         const deltaMap = new Map();
         for(const [id, ghost] of this.#ghosts) {
             const dirty = ghost.dirtyState;
@@ -117,7 +107,7 @@ class GhostManager {
                 this.#frame = {
                     frame: this.#current,
                     delta: Object.fromEntries(deltaMap)
-                }
+                };
             }
         }
         else {

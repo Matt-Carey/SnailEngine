@@ -8,8 +8,9 @@ import { str2ab } from './../util/buffer.js';
 class Channel {
     #world = null;
     #channel = null;
-    #snapMap = new Map();
-    #ghostFrame = -1;
+    #snapshot = null;
+    #snapshotKeySet = new Set();
+    #ackTime = -1;
 
     constructor(world, worldURL) {
         this.#world = world;
@@ -22,12 +23,6 @@ class Channel {
             }
 
             this.#world.onEntityAdded.bind((entity) => {
-                const interpolationMethod = entity.class.interpolationMethod;
-                const name = entity.class.replicatedSchemaModel.schema.name;
-                if(!this.#snapMap.has(name)) {
-                    const cfg = Config.get();
-                    this.#snapMap.set(name, new Snap.SnapshotInterpolation(cfg.server.fps ?? 20));
-                }
             });
 
             const geckos = module.geckos;
@@ -37,6 +32,9 @@ class Channel {
                 if (error) {
                     console.error(error.message);
                 }
+
+                const cfg = Config.get();
+                this.#snapshot = new Snap.SnapshotInterpolation(cfg.server.fps ?? 20);
               
                 // listens for a disconnection
                 this.#channel.onDisconnect(() => {
@@ -57,39 +55,90 @@ class Channel {
                     EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json);
                 })
 
-                this.#channel.on('snapshot', snapshotJson => {
-                    for(const modelName in snapshotJson) {
-                        if(Entity.schemaModelMap.has(modelName)) {
-                            const snapshotString = snapshotJson[modelName];
-                            const snapshotArraybuffer = str2ab(snapshotString);
-                            const snapshot = Entity.schemaModelMap.get(modelName).fromBuffer(snapshotArraybuffer);
-                            if(this.#snapMap.has(modelName)) {
-                                this.#snapMap.get(modelName).snapshot.add(snapshot);
+                this.#channel.on('state', state => {
+                    if(state.time < this.#ackTime) return;
+                    this.#ackTime = state.time;
+
+                    const entityStateMap = new Map();
+                    const replicationTypeMap = new Map();
+                    for(const entity of this.#world.entities) {
+                        if(entity.replicates && entity.class.hasReplicatedProperties) {
+                            const aggrigateReplicatedProperties = entity.class.aggrigateReplicatedProperties;
+                            const entityState = entity.toJSON();
+                            for(const key in entityState) {
+                                if(!(key in aggrigateReplicatedProperties)) {
+                                    delete entityState[key];
+                                }
+                            }
+                            const replicationType = entity.class.replicationType;
+                            if(!replicationTypeMap.has(replicationType)) {
+                                replicationTypeMap.set(replicationType, []);
+                            }
+                            replicationTypeMap.get(replicationType).push(entityState);
+                            entityStateMap.set(entity.UUID, entityState);
+                        }
+                    }
+
+                    const frame = {};
+                    for(const [key, value] of replicationTypeMap) {
+                        frame[key] = value;
+                        this.#snapshotKeySet.add(key);
+                    }
+
+                    for(const key in state.schema) {
+                        if(Entity.schemaModelMap.has(key)) {
+                            const arrayBuffer = str2ab(state.schema[key]);
+                            const modelMap = Entity.schemaModelMap.get(key);
+                            const snapshot = modelMap.fromBuffer(arrayBuffer);
+                            for(const index in snapshot) {
+                                const entitySnapshot = snapshot[index];
+                                if(entityStateMap.has(entitySnapshot.id)) {
+                                    const entityState = entityStateMap.get(entitySnapshot.id);
+                                    for(const property in entitySnapshot) {
+                                        entityState[property] = entitySnapshot[property];
+                                    }
+                                }
                             }
                         }
                     }
+
+                    if(state.ghost != null) {
+                        const delta = state.ghost.delta;
+                        for(const key in delta) {
+                            if(entityStateMap.has(key)) {
+                                const entityState = entityStateMap.get(key);
+                                for(const property in delta[key]) {
+                                    entityState[property] = delta[key][property];
+                                }
+                            }
+                        }
+                        this.#channel.emit('ack', state.ghost.frame);
+                    }
+
+                    if((() => {
+                        for(const _ in frame) return true;
+                        return false;
+                    })()) {
+                        this.#snapshot.snapshot.add({id: state.id, time: state.time, state: frame});
+                    }
                 });
-
-                this.#channel.on('dirty_ghost', ghost => {
-                    if(ghost.frame <= this.#ghostFrame) return;
-                    this.#ghostFrame = ghost.frame;
-                    if(Math.random() > 0.8)
-                    this.#channel.emit('ack_dirty_ghost', ghost.frame);
-                })
-
             });
         });
     }
 
     tick(dt) {
-        for(const [key, value] of this.#snapMap) {
-            const interpolationMethod = Entity.interpolationMethodMap.get(key);
-            const snapshot = value.calcInterpolation(interpolationMethod ?? '', 'raw');
-            if(snapshot != undefined) {
-                for(const state of snapshot.state) {
-                    const entity = this.#world.getEntity(state.id);
-                    if(entity != null) {
-                        entity.fromJSON(state);
+        if(this.#snapshot != null) {
+            for(const [key, value] of Entity.replicationTypeMap) {
+                if(key == value && this.#snapshotKeySet.has(key)) {
+                    const interpolationMethod = Entity.interpolationMethodMap.get(key);
+                    const snapshot = this.#snapshot.calcInterpolation(interpolationMethod, value);
+                    if(snapshot != undefined) {
+                        for(const state of snapshot.state) {
+                            const entity = this.#world.getEntity(state.id);
+                            if(entity != null) {
+                                entity.fromJSON(state);
+                            }
+                        }
                     }
                 }
             }

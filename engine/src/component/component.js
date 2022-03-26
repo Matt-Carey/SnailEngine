@@ -33,7 +33,7 @@ class Component extends Entity {
 	}
 
 	get replicates() {
-		return true;
+		return false;
 	}
 
 	static get replicatedProperties() {
@@ -50,13 +50,11 @@ class Component extends Entity {
 				schema: { type: Schema.int16, digits: 2 },
 				interp: 'linear'
 			},
-			
-            scale_x : { schema: { type: Schema.int16, digits: 2 } },
-            scale_y : { schema: { type: Schema.int16, digits: 2 } },
-            scale_z : { schema: { type: Schema.int16, digits: 2 } }
+            scale_x : {},
+            scale_y : {},
+            scale_z : {}
         }
     }
-
 	addOffset(vector) {
 		this.#pos = Vector.add(this.#pos, vector);
 	}

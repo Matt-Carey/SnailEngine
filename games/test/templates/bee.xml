@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template>
-	<entity cdn="Engine" type="Model" src="/src/component/3d/model/model.js">
+	<entity cdn="Game" type="TestModel" src="/src/testModel.js">
 		<gltf>/content/glb/bee.glb</gltf>
 		<scale_x>0.2</scale_x>
 		<scale_y>0.2</scale_y>

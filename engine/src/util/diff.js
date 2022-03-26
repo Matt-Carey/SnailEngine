@@ -43,7 +43,7 @@ function isPrimitive(obj)
     return (obj !== Object(obj));
 }
 
-function cloneJSON(obj) {
+function deepCopy(obj) {
     // basic type deep copy
     if (obj === null || obj === undefined || typeof obj !== 'object')  {
         return obj;
@@ -52,16 +52,24 @@ function cloneJSON(obj) {
     if (obj instanceof Array) {
         var cloneA = [];
         for (var i = 0; i < obj.length; ++i) {
-            cloneA[i] = cloneJSON(obj[i]);
+            cloneA[i] = deepCopy(obj[i]);
         }              
         return cloneA;
-    }                  
+    }
+    // map deep copy
+    if (obj instanceof Map) {
+        var cloneM = new Map();
+        for(const [k,v] of obj) {
+            cloneM.set(k, deepCopy(v));
+        }
+        return cloneM;
+    }           
     // object deep copy
     var cloneO = {};   
     for (var i in obj) {
-        cloneO[i] = cloneJSON(obj[i]);
+        cloneO[i] = deepCopy(obj[i]);
     }                  
     return cloneO;
 }
 
-export { diff, deepEqual, cloneJSON };
+export { diff, deepEqual, deepCopy };

@@ -10,6 +10,7 @@ class EntityFactory {
 					entity.fromJSON(json);
 					entity.default = entity.toJSON();
 					world.addEntity(entity);
+					entity.replicatedState;
 					return entity;
 				}
 			}
