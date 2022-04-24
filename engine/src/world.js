@@ -99,6 +99,19 @@ class World {
         if(this.#channel != null) {
             this.#channel.tick(dt);
         }
+        if(this.#physics != null) {
+            if(this.#ownershipMap.has(null)) {
+                for(const root of this.#ownershipMap.get(null)) {
+                    this.#prePhysTickEntity(dt, root);
+                }
+            }
+            this.#physics.step(0.001 * dt);
+            if(this.#ownershipMap.has(null)) {
+                for(const root of this.#ownershipMap.get(null)) {
+                    this.#postPhysTickEntity(dt, root);
+                }
+            }
+        }
         if(this.#ownershipMap.has(null)) {
             for(const root of this.#ownershipMap.get(null)) {
                 this.#tickEntity(dt, root);
@@ -117,6 +130,32 @@ class World {
                 const children = this.#ownershipMap.get(UUID);
                 for(const child of children) {
                     this.#tickEntity(dt, child);
+                }
+            }
+        }
+    }
+
+    #prePhysTickEntity(dt, UUID) {
+        const entity = this.#entityMap.get(UUID)
+        if(entity != null) {
+            entity.prePhysTick(dt);
+            if(this.#ownershipMap.has(UUID)) {
+                const children = this.#ownershipMap.get(UUID);
+                for(const child of children) {
+                    this.#prePhysTickEntity(dt, child);
+                }
+            }
+        }
+    }
+
+    #postPhysTickEntity(dt, UUID) {
+        const entity = this.#entityMap.get(UUID)
+        if(entity != null) {
+            entity.postPhysTick(dt);
+            if(this.#ownershipMap.has(UUID)) {
+                const children = this.#ownershipMap.get(UUID);
+                for(const child of children) {
+                    this.#postPhysTickEntity(dt, child);
                 }
             }
         }

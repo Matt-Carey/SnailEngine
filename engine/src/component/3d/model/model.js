@@ -42,6 +42,9 @@ class Model extends Component {
             const position = this.position;
             this.#model.position.set(position.x, position.y, position.z);
 
+            const rotation = this.rotation;
+            this.#model.rotation.set(rotation.x, rotation.y, rotation.z);
+
             const scale = this.scale;
             this.#model.scale.set(scale.x, scale.y, scale.z);
         }

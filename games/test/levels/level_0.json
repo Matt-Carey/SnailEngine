@@ -11,27 +11,169 @@
 		}
 	  },
 	  {
-		"path": "/templates/bee.xml",
+		"path": "/templates/robot.xml",
 		"overrides": {
 			"TestModel_0": {
-				"pos_x": 2.5,
+				"pos_x": 5,
 				"pos_y": -3,
-				"pos_z": -10
+				"pos_z": -10,
+				"rot_y": 1.5707
 			}
 		}
 	  },
 	  {
-		"path": "/templates/troll.xml",
+		"path": "/templates/robot.xml",
 		"overrides": {
 			"TestModel_0": {
-				"pos_x": -2.5,
+				"pos_x": -5,
 				"pos_y": -3,
-				"pos_z": -10
+				"pos_z": -10,
+				"rot_y": 3.14159
 			}
 		}
 	  }
 	],
 	"entities": [
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "sphere",
+					"type": "dynamic",
+					"radius": 2
+				}
+			},
+			"json": {
+				"pos_x": -5,
+				"pos_y": 15,
+				"pos_z": -15
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "cone",
+					"type": "dynamic",
+					"radius": 2,
+					"halfHeight": 3
+				}
+			},
+			"json": {
+				"pos_x": 0,
+				"pos_y": 5,
+				"pos_z": -15
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "box",
+					"type": "static",
+					"halfExtents": {
+						"x":8,
+						"y":1,
+						"z":5
+					}
+				}
+			},
+			"json": {
+				"pos_x": 0,
+				"pos_y": -4,
+				"pos_z": -12.5
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "box",
+					"type": "static",
+					"halfExtents": {
+						"x":1,
+						"y":5,
+						"z":5
+					}
+				}
+			},
+			"json": {
+				"pos_x": 8,
+				"pos_y": 0,
+				"pos_z": -12.5
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "box",
+					"type": "static",
+					"halfExtents": {
+						"x":1,
+						"y":5,
+						"z":5
+					}
+				}
+			},
+			"json": {
+				"pos_x": -8,
+				"pos_y": 0,
+				"pos_z": -12.5
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "box",
+					"type": "static",
+					"halfExtents": {
+						"x":8,
+						"y":5,
+						"z":1
+					}
+				}
+			},
+			"json": {
+				"pos_x": 0,
+				"pos_y": 0,
+				"pos_z": -17.5
+			}
+		},
+		{
+			"meta": {
+				"cdn": "Engine",
+				"type": "RigidBody",
+				"src": "/src/component/3d/physics/rigidBody.js",
+				"props": {
+					"shape": "box",
+					"type": "static",
+					"halfExtents": {
+						"x":8,
+						"y":5,
+						"z":1
+					}
+				}
+			},
+			"json": {
+				"pos_x": 0,
+				"pos_y": 0,
+				"pos_z": -7.5
+			}
+		},
 		{
 			"meta": {
 				"cdn": "Engine",

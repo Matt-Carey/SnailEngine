@@ -14,9 +14,10 @@ class TestModel extends Model {
     tick(dt) {
         super.tick(dt);
         if(IS_NODE) {
-            this.addOffset(new Vector(0.1,0.0,0.0));
-            if(this.position.x > 10) {
-                this.addOffset(new Vector(-20, 0, 0));
+            this.addRot(0.0, 0.1, 0.0);
+            this.addPos(0.25, 0.0, 0.0);
+            while(this.position.x > 7.5) {
+                this.addPos(-15.0, 0.0, 0.0);
             }
         }
     }

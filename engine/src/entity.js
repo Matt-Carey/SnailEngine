@@ -9,7 +9,6 @@ class Entity {
 	#owner = null;
     #netId = null;
     #default = null;
-    #serializeMap = new Map();
     
     static #replicatedPropertiesMap = new Map();
     static #replicationTypeMap = new Map();
@@ -286,6 +285,14 @@ class Entity {
 
     tick(dt) {
         
+    }
+
+    prePhysTick() {
+
+    }
+
+    postPhysTick() {
+
     }
 
 }
