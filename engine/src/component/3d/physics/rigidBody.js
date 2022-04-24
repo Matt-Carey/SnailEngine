@@ -75,6 +75,9 @@ class RigidBody extends Component {
             case 'kinematic':
                 this.#rigidBodyConfig.type = OimoRigidBodyType.KINEMATIC;
                 break;
+            case 'static':
+                this.#rigidBodyConfig.type = OimoRigidBodyType.STATIC;
+                break;
         }
 
 		this.#rigidBodyConfig.position = new OimoVec3(0, 0, 0);
