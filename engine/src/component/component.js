@@ -41,10 +41,6 @@ class Component extends Entity {
 		return json;
 	}
 
-	get replicates() {
-		return false;
-	}
-
 	static get replicatedProperties() {
         return {
             pos_x : { 

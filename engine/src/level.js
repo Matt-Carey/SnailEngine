@@ -20,14 +20,14 @@ class Level {
 							entity.json[property] = templateOverrides[key][property];
 						}
 					}
-					EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json).then(entity => {
+					EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json).then(entity => {
 						this.#entities.push(entity);
 					});
 				}
 			});
 		}
 		for(const entity of json.entities) {
-			EntityFactory.make(this.#world, UUID.get(), entity.meta, entity.json).then(entity => {
+			EntityFactory.make(this.#world, UUID.get(), entity.meta, entity.init, entity.json).then(entity => {
 				this.#entities.push(entity);
 			});
 		}

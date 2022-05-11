@@ -3,9 +3,9 @@
 	  {
 		"path": "/templates/robot.xml",
 		"overrides": {
-			"TestModel_0": {
+			"RigidBody_0": {
 				"pos_x": 0,
-				"pos_y": -3,
+				"pos_y": 20,
 				"pos_z": -15
 			}
 		}
@@ -13,9 +13,9 @@
 	  {
 		"path": "/templates/robot.xml",
 		"overrides": {
-			"TestModel_0": {
+			"RigidBody_0": {
 				"pos_x": 5,
-				"pos_y": -3,
+				"pos_y": 20,
 				"pos_z": -10,
 				"rot_y": 1.5707
 			}
@@ -24,9 +24,9 @@
 	  {
 		"path": "/templates/robot.xml",
 		"overrides": {
-			"TestModel_0": {
+			"RigidBody_0": {
 				"pos_x": -5,
-				"pos_y": -3,
+				"pos_y": 20,
 				"pos_z": -10,
 				"rot_y": 3.14159
 			}
@@ -38,50 +38,15 @@
 			"meta": {
 				"cdn": "Engine",
 				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "sphere",
-					"type": "dynamic",
-					"radius": 2
-				}
+				"src": "/src/component/3d/physics/rigidBody.js"
 			},
-			"json": {
-				"pos_x": -5,
-				"pos_y": 15,
-				"pos_z": -15
-			}
-		},
-		{
-			"meta": {
-				"cdn": "Engine",
-				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "cone",
-					"type": "dynamic",
-					"radius": 2,
-					"halfHeight": 3
-				}
-			},
-			"json": {
-				"pos_x": 0,
-				"pos_y": 5,
-				"pos_z": -15
-			}
-		},
-		{
-			"meta": {
-				"cdn": "Engine",
-				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "box",
-					"type": "static",
-					"halfExtents": {
-						"x":8,
-						"y":1,
-						"z":5
-					}
+			"init": {
+				"shape": "box",
+				"type": "static",
+				"halfExtents": {
+					"x":8,
+					"y":1,
+					"z":5
 				}
 			},
 			"json": {
@@ -94,15 +59,15 @@
 			"meta": {
 				"cdn": "Engine",
 				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "box",
-					"type": "static",
-					"halfExtents": {
-						"x":1,
-						"y":5,
-						"z":5
-					}
+				"src": "/src/component/3d/physics/rigidBody.js"
+			},
+			"init": {
+				"shape": "box",
+				"type": "static",
+				"halfExtents": {
+					"x":1,
+					"y":5,
+					"z":5
 				}
 			},
 			"json": {
@@ -115,15 +80,15 @@
 			"meta": {
 				"cdn": "Engine",
 				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "box",
-					"type": "static",
-					"halfExtents": {
-						"x":1,
-						"y":5,
-						"z":5
-					}
+				"src": "/src/component/3d/physics/rigidBody.js"
+			},
+			"init": {
+				"shape": "box",
+				"type": "static",
+				"halfExtents": {
+					"x":1,
+					"y":5,
+					"z":5
 				}
 			},
 			"json": {
@@ -136,15 +101,15 @@
 			"meta": {
 				"cdn": "Engine",
 				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "box",
-					"type": "static",
-					"halfExtents": {
-						"x":8,
-						"y":5,
-						"z":1
-					}
+				"src": "/src/component/3d/physics/rigidBody.js"
+			},
+			"init": {
+				"shape": "box",
+				"type": "static",
+				"halfExtents": {
+					"x":8,
+					"y":5,
+					"z":1
 				}
 			},
 			"json": {
@@ -157,15 +122,15 @@
 			"meta": {
 				"cdn": "Engine",
 				"type": "RigidBody",
-				"src": "/src/component/3d/physics/rigidBody.js",
-				"props": {
-					"shape": "box",
-					"type": "static",
-					"halfExtents": {
-						"x":8,
-						"y":5,
-						"z":1
-					}
+				"src": "/src/component/3d/physics/rigidBody.js"
+			},
+			"init": {
+				"shape": "box",
+				"type": "static",
+				"halfExtents": {
+					"x":8,
+					"y":5,
+					"z":1
 				}
 			},
 			"json": {

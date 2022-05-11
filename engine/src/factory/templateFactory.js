@@ -24,6 +24,7 @@ class Template {
             json[key + '_' + keyMap.get(key)] = {
                 "UUID": templateEntity.UUID,
                 "meta": templateEntity.meta,
+                "init": templateEntity.init,
                 "json": this.#process(templateEntity.json),
             };
             keyMap.set(key, keyMap.get(key) + 1);
@@ -68,17 +69,23 @@ class Template {
 class TemplateEntity {
     #UUID = null;
     #meta = null;
+    #init = null;
     #json = null;
 
     constructor(json) {
         this.#UUID = UUID.get();
         this.#meta = json['@_'];
         delete json['@_'];
-        this.#json = json;
+        this.#init = json['init'] ?? {};
+        this.#json = json['json'] ?? {};
     }
 
     get meta() {
         return this.#meta;
+    }
+
+    get init() {
+        return this.#init;
     }
 
     get json() {

@@ -99,16 +99,19 @@ class World {
         if(this.#channel != null) {
             this.#channel.tick(dt);
         }
-        if(this.#physics != null) {
-            if(this.#ownershipMap.has(null)) {
-                for(const root of this.#ownershipMap.get(null)) {
-                    this.#prePhysTickEntity(dt, root);
+        // Only tick physics on authority for now
+        if(this.authority) {
+            if(this.#physics != null) {
+                if(this.#ownershipMap.has(null)) {
+                    for(const root of this.#ownershipMap.get(null)) {
+                        this.#prePhysTickEntity(dt, root);
+                    }
                 }
-            }
-            this.#physics.step(0.001 * dt);
-            if(this.#ownershipMap.has(null)) {
-                for(const root of this.#ownershipMap.get(null)) {
-                    this.#postPhysTickEntity(dt, root);
+                this.#physics.step(0.001 * dt);
+                if(this.#ownershipMap.has(null)) {
+                    for(const root of this.#ownershipMap.get(null)) {
+                        this.#postPhysTickEntity(dt, root);
+                    }
                 }
             }
         }

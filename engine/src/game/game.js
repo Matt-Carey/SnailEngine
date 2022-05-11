@@ -16,7 +16,7 @@ class Game {
             const keys = Object.keys(template);
             for(const key in template) {
                 const entity = template[key];
-                EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json).then(entity => {
+                EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json).then(entity => {
                     if(keys.indexOf(key) === 0) {
                         this.#state = entity;
                         this._onStateReady();
@@ -33,7 +33,7 @@ class Game {
             for(const key in template) {
                 const entity = template[key];
                 entity.json.netId = channel?.id;
-                EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json).then(entity => {
+                EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json).then(entity => {
                     if(keys.indexOf(key) === 0) {
                         this.#controllers.set(channel, entity);
                     }

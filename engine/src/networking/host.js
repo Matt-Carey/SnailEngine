@@ -43,8 +43,9 @@ class Host {
             init.entities = [];
             for(const entity of this.#world.entities) {
                 init.entities.push({
-                    "meta": entity.meta,
                     "UUID": entity.UUID,
+                    "meta": entity.meta,
+                    "init": entity.init,
                     "json": entity.default
                 });
             }
@@ -57,8 +58,9 @@ class Host {
 
         this.#world.onEntityAdded.bind((entity)=>{
             this.#io.emit('entity_added', {
-                "meta": entity.meta,
                 "UUID": entity.UUID,
+                "meta": entity.meta,
+                "init": entity.init,
                 "json": entity.default
             },
             { reliable: true });

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template>
 	<entity cdn="Game" type="TestModel" src="/src/testModel.js">
-		<gltf>/content/glb/troll.glb</gltf>
-		<scale_x>75</scale_x>
-		<scale_y>75</scale_y>
-		<scale_z>75</scale_z>
+		<json>
+			<gltf>/content/glb/troll.glb</gltf>
+			<scale_x>75</scale_x>
+			<scale_y>75</scale_y>
+			<scale_z>75</scale_z>
+		</json>
 	</entity>
 	<entity cdn="Game" type="TrollAnimationMixer" src="/src/TrollAnimationMixer.js">
-		<owner type="entity">0</owner>
-		<gltf>/content/glb/troll.glb</gltf>
+		<json>
+			<owner type="entity">0</owner>
+			<gltf>/content/glb/troll.glb</gltf>
+		</json>
 	</entity>
 </template>

@@ -6,8 +6,10 @@ class Entity {
     #world = null;
     #UUID = null;
     #meta = null;
+    #init = null;
 	#owner = null;
     #netId = null;
+    #replicates = null;
     #default = null;
     
     static #replicatedPropertiesMap = new Map();
@@ -20,6 +22,9 @@ class Entity {
         this.#world = init.world;
         this.#UUID = init.UUID;
         this.#meta = init.meta;
+        this.#init = init.init;
+
+        this.#replicates = init.init?.replicates ?? false;
 
         this.#class.replicationType;
         this.#class.replicatedSchemaModel;
@@ -58,7 +63,7 @@ class Entity {
     }
 
     get replicates() {
-        return false;
+        return this.#replicates;
     }
 
     static get replicatedProperties() {
@@ -263,6 +268,10 @@ class Entity {
 
     get meta() {
         return this.#meta;
+    }
+
+    get init() {
+        return this.#init;
     }
 
     get owner() {

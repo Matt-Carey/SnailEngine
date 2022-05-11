@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template>
 	<entity cdn="Game" type="TestModel" src="/src/testModel.js">
-		<gltf>/content/glb/bee.glb</gltf>
-		<scale_x>0.2</scale_x>
-		<scale_y>0.2</scale_y>
-		<scale_z>0.2</scale_z>
+		<json>
+			<gltf>/content/glb/bee.glb</gltf>
+			<scale_x>0.2</scale_x>
+			<scale_y>0.2</scale_y>
+			<scale_z>0.2</scale_z>
+		</json>
 	</entity>
 	<entity cdn="Game" type="BeeAnimationMixer" src="/src/BeeAnimationMixer.js">
-		<owner type="entity">0</owner>
-		<gltf>/content/glb/bee.glb</gltf>
+		<json>
+			<owner type="entity">0</owner>
+			<gltf>/content/glb/bee.glb</gltf>
+		</json>
 	</entity>
 </template>

@@ -37,11 +37,11 @@ class RigidBody extends Component {
         super(init);
 
         this.#geometry = null;
-        const radius = init.meta.props?.radius ?? 0.5;
-        const halfHeight = init.meta.props?.halfHeight ?? 0.5;
-        const halfExtents = init.meta.props?.halfExtents;
+        const radius = init.init?.radius ?? 0.5;
+        const halfHeight = init.init?.halfHeight ?? 0.5;
+        const halfExtents = init.init?.halfExtents;
         
-        switch(init.meta.props?.shape) {
+        switch(init.init?.shape) {
             case 'sphere':
                 this.#geometry = new OimoSphereGeometry(radius);
                 break;
@@ -58,7 +58,7 @@ class RigidBody extends Component {
                 this.#geometry = new OimoCapsuleGeometry(radius, halfHeight);
                 break;
             default:
-                console.log('Warning: RigidBody with unspecified init.meta.props.rigidBodyShape!');
+                console.log('Warning: RigidBody with unspecified init.init.rigidBodyShape!');
                 this.#geometry = new OimoSphereGeometry(radius);
                 break;
         }
@@ -68,7 +68,7 @@ class RigidBody extends Component {
 
 		this.#rigidBodyConfig = new OimoRigidBodyConfig();
 		this.#rigidBodyConfig.type = OimoRigidBodyType.STATIC;
-        switch(init.meta.props?.type) {
+        switch(init.init?.type) {
             case 'dynamic':
                 this.#rigidBodyConfig.type = OimoRigidBodyType.DYNAMIC;
                 break;
@@ -90,7 +90,7 @@ class RigidBody extends Component {
 
         this.#debugGeometry = null;
 
-        switch(init.meta.props?.shape) {
+        switch(init.init?.shape) {
             case 'sphere':
                 this.#debugGeometry = new ThreeSphereGeometry(radius);
                 break;

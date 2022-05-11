@@ -47,12 +47,12 @@ class Channel {
 
                 this.#channel.on('init', json => {
                     for(const entity of json.entities) {
-                        EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json);
+                        EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json);
                     }
                 });
 
                 this.#channel.on('entity_added', entity => {
-                    EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.json);
+                    EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json);
                 })
 
                 this.#channel.on('state', state => {
@@ -131,14 +131,18 @@ class Channel {
             for(const [key, value] of Entity.replicationTypeMap) {
                 if(key == value && this.#snapshotKeySet.has(key)) {
                     const interpolationMethod = Entity.interpolationMethodMap.get(key);
-                    const snapshot = this.#snapshot.calcInterpolation(interpolationMethod, value);
-                    if(snapshot != undefined) {
-                        for(const state of snapshot.state) {
-                            const entity = this.#world.getEntity(state.id);
-                            if(entity != null) {
-                                entity.fromJSON(state);
+                    try {
+                        const snapshot = this.#snapshot.calcInterpolation(interpolationMethod, value);
+                        if(snapshot != undefined) {
+                            for(const state of snapshot.state) {
+                                const entity = this.#world.getEntity(state.id);
+                                if(entity != null) {
+                                    entity.fromJSON(state);
+                                }
                             }
                         }
+                    } catch(error) {
+                        console.log("Error in interpolating snapshot" + key);
                     }
                 }
             }
