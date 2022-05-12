@@ -1,4 +1,5 @@
 import { XMLFactory } from './xmlFactory.js';
+import { EntityFactory } from './entityFactory.js';
 import { UUID } from './../util/uuid.js';
 
 class Template {
@@ -108,6 +109,22 @@ class TemplateFactory {
     static async get(url) {
         const json = await XMLFactory.get(url, TemplateFactory.#XMLoptions);
         return JSON.parse(JSON.stringify(new Template(json.template)));
+    }
+
+    static async make(world, url, overrides) {
+        const entityPromises = [];
+        const template = await TemplateFactory.get(url);
+        for(const key in template) {
+            const entity = template[key];
+            if(key in (overrides ?? [])) {
+                for(const property in overrides[key]) {
+                    entity.json[property] = overrides[key][property];
+                }
+            }
+            const entityPromise = EntityFactory.make(world, entity.UUID, entity.meta, entity.init, entity.json);
+            entityPromises.push(entityPromise);
+        }
+        return await Promise.all(entityPromises);
     }
 }
 

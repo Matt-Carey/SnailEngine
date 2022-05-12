@@ -26,7 +26,8 @@
     },
     "json": {
       "state": "/templates/testState.xml",
-      "controller": "/templates/testController.xml"
+      "controller": "/templates/testController.xml",
+      "player": "/templates/testPlayer.xml"
     }
   },
   "levels": [

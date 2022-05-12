@@ -12,17 +12,9 @@ class Level {
 		for(const templateJson of json.templates) {
 			const templatePath = WORKING_DIR + templateJson.path;
 			const templateOverrides = templateJson.overrides;
-			TemplateFactory.get(templatePath).then(template => {
-				for(const key in template) {
-					const entity = template[key];
-					if(key in templateOverrides) {
-						for(const property in templateOverrides[key]) {
-							entity.json[property] = templateOverrides[key][property];
-						}
-					}
-					EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json).then(entity => {
-						this.#entities.push(entity);
-					});
+			TemplateFactory.make(this.#world, templatePath, templateOverrides).then(entities => {
+				for(const entity of entities) {
+					this.#entities.push(entity);
 				}
 			});
 		}

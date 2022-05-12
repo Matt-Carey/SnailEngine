@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <entity cdn="Game" type="TestPlayer" src="/src/testPlayer.js">
+	</entity>
+    <entity cdn="Engine" type="RigidBody" src="/src/component/3d/physics/rigidBody.js">
+		<init>
+			<replicates>true</replicates>
+			<shape>capsule</shape>
+			<type>dynamic</type>
+			<radius>2</radius>
+            <halfHeight>1</halfHeight>
+		</init>
+		<json>
+			<owner type="entity">0</owner>
+		</json>
+	</entity>
+	<entity cdn="Game" type="TestModel" src="/src/testModel.js">
+		<init>
+			<replicates>true</replicates>
+		</init>
+		<json>
+			<owner type="entity">0</owner>
+			<gltf>/content/glb/robot.glb</gltf>
+		</json>
+	</entity>
+	<entity cdn="Game" type="RobotAnimationMixer" src="/src/RobotAnimationMixer.js">
+		<json>
+			<owner type="entity">2</owner>
+			<gltf>/content/glb/robot.glb</gltf>
+		</json>
+	</entity>
+</template>

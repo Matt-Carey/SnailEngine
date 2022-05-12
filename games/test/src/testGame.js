@@ -5,16 +5,24 @@ class TestGame extends Game {
         super(world, json);
     }
 
-    _onStateReady() {
-        super._onStateReady();
-    }
-
     onLogin(channel) {
         super.onLogin(channel);
     }
 
     onLogout(channel) {
         super.onLogin(channel);
+    }
+
+    _onStateReady(state) {
+        super._onStateReady(state);
+    }
+
+    _onControllerReady(controller) {
+        super._onControllerReady(controller);
+    }
+
+    _canPlayerStart(controller) {
+        return super._canPlayerStart(controller);
     }
 }
 

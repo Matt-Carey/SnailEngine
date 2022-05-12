@@ -1,5 +1,4 @@
 import { TemplateFactory } from './../factory/templateFactory.js';
-import { EntityFactory } from './../factory/entityFactory.js';
 import { WORKING_DIR } from './../util/env.js';
 
 class Game {
@@ -7,38 +6,24 @@ class Game {
     #state = null;
     #controllerTemplate = null;
     #controllers = new Map();
+    #playerTemplate = null;
 
     constructor(world, json) {
         this.#world = world;
         this.#controllerTemplate = json.controller;
+        this.#playerTemplate = json.player;
         const statePath = WORKING_DIR + json.state;
-        TemplateFactory.get(statePath).then(template => {
-            const keys = Object.keys(template);
-            for(const key in template) {
-                const entity = template[key];
-                EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json).then(entity => {
-                    if(keys.indexOf(key) === 0) {
-                        this.#state = entity;
-                        this._onStateReady();
-                    }
-                });
-            }
+        TemplateFactory.make(this.#world, statePath, null).then(entities => {
+            this.#state = entities[0];
+            this._onStateReady(entities[0]);
         });
     }
 
     onLogin(channel) {
         const controllerPath = WORKING_DIR + this.#controllerTemplate;
-        TemplateFactory.get(controllerPath).then(template => {
-            const keys = Object.keys(template);
-            for(const key in template) {
-                const entity = template[key];
-                entity.json.netId = channel?.id;
-                EntityFactory.make(this.#world, entity.UUID, entity.meta, entity.init, entity.json).then(entity => {
-                    if(keys.indexOf(key) === 0) {
-                        this.#controllers.set(channel, entity);
-                    }
-                });
-            }
+        TemplateFactory.make(this.#world, controllerPath, null).then(entities => {
+            this.#controllers.set(channel, entities[0]);
+            this._onControllerReady(entities[0]);
         });
     }
 
@@ -46,9 +31,23 @@ class Game {
 
     }
 
-    _onStateReady() {
+    _onStateReady(state) {
 
     }
+
+    _onControllerReady(controller) {
+        if(this._canPlayerStart(controller)) {
+            const playerPath = WORKING_DIR + this.#playerTemplate;
+            TemplateFactory.make(this.#world, playerPath, null).then(entities => {
+                // Bind player to controller
+            });
+        }
+    }
+
+    _canPlayerStart(controller) {
+        return controller.pawn == null;
+    }
+
 
     get state() {
         return this.#state;
