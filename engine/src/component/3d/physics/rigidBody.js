@@ -33,6 +33,9 @@ class RigidBody extends Component {
     #debugMesh = null;
     #debugMeshMat = null;
 
+	#linVel = new Vector(0, 0, 0);
+	#angVel = new Vector(0, 0, 0);
+
     constructor(init) {
         super(init);
 
@@ -117,20 +120,55 @@ class RigidBody extends Component {
     }
 
     fromJSON(json) {
-        super.fromJSON(json);
-    }
+		super.fromJSON(json);
+		
+		this.#linVel.x = json.linVel_x ?? this.#linVel.x;
+		this.#linVel.y = json.linVel_y ?? this.#linVel.y;
+		this.#linVel.z = json.linVel_z ?? this.#linVel.z;
 
-    toJSON() {
-        const json = super.toJSON();
-        return json;
+		this.#angVel.x = json.angVel_x ?? this.#angVel.x;
+		this.#angVel.y = json.angVel_y ?? this.#angVel.y;
+		this.#angVel.z = json.angVel_z ?? this.#angVel.z;
+	}
+
+	toJSON() {
+		const json = super.toJSON();
+
+		json.linVel_x = this.#linVel.x;
+		json.linVel_y = this.#linVel.y;
+		json.linVel_z = this.#linVel.z;
+
+		json.angVel_x = this.#angVel.x;
+		json.angVel_y = this.#angVel.y;
+		json.angVel_z = this.#angVel.z;
+
+		return json;
+	}
+
+    static get replicatedProperties() {
+        return {
+            linVel_x : {interp: 'linear'},
+            linVel_y : {interp: 'linear'},
+            linVel_z : {interp: 'linear'},
+            angVel_x : {interp: 'deg'},
+            angVel_y : {interp: 'deg'},
+            angVel_z : {interp: 'deg'}
+        }
     }
 
     prePhysTick() {
         if(this.#rigidBody != null) {
             const position = this.position;
             this.#rigidBody.setPosition(new OimoVec3(position.x, position.y, position.z));
+
             const rotation = this.rotation;
             this.#rigidBody.setRotationXyz(new OimoVec3(rotation.x, rotation.y, rotation.z));
+
+            const linearVelocity = this.linearVelocity;
+            this.#rigidBody.setLinearVelocity(new OimoVec3(linearVelocity.x, linearVelocity.y, linearVelocity.z));
+
+            const angularVelocity = this.angularVelocity;
+            this.#rigidBody.setAngularVelocity(new OimoVec3(angularVelocity.x, angularVelocity.y, angularVelocity.z));
         }
     }
 
@@ -141,6 +179,12 @@ class RigidBody extends Component {
 
             const physRotation = this.#rigidBody.getRotation().toEulerXyz();
             this.relativeRotation = new Vector(physRotation.x, physRotation.y, physRotation.z);
+
+            const physLinearVelocity = this.#rigidBody.getLinearVelocity();
+            this.linearVelocity = new Vector(physLinearVelocity.x, physLinearVelocity.y, physLinearVelocity.z);
+
+            const physAngularVelocity = this.#rigidBody.getAngularVelocity();
+            this.angularVelocity = new Vector(physAngularVelocity.x, physAngularVelocity.y, physAngularVelocity.z);
         }
     }
 
@@ -156,6 +200,22 @@ class RigidBody extends Component {
             const scale = this.scale;
             this.#debugMesh.scale.set(scale.x, scale.y, scale.z);
         }
+    }
+
+    get linearVelocity() {
+        return this.#linVel;
+    }
+
+    set linearVelocity(linVel) {
+        this.#linVel = linVel;
+    }
+
+    get angularVelocity() {
+        return this.#angVel;
+    }
+
+    set angularVelocity(angVel) {
+        this.#angVel = angVel;
     }
 
 }
